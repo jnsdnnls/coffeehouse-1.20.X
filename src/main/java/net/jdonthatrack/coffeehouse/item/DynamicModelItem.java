@@ -1,8 +1,8 @@
 package net.jdonthatrack.coffeehouse.item;
 
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 
 public interface DynamicModelItem {
 
@@ -13,16 +13,14 @@ public interface DynamicModelItem {
 
     default String getModel(ItemStack stack) {
         NbtCompound nbtData = stack.getOrCreateNbt();
-        if (nbtData.contains("model", NbtType.STRING)) {
+        if (nbtData.contains("model", NbtElement.STRING_TYPE)) {
             return nbtData.getString("model");
         }
         return "default_model";  // Default model in case it's not set
     }
 
     default void setModel(ItemStack stack, String model) {
-        NbtCompound nbtData = new NbtCompound();
-        nbtData.putString("model", model);
-
-        stack.setNbt(nbtData);;
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putString("model", model);
     }
 }
