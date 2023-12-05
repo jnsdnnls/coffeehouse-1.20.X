@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "coffeehouse:undefinium_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "coffeehouse:undefinium"
+  }
+}

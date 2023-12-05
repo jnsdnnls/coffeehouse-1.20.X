@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "coffeehouse:undefinium_block",
+    "coffeehouse:undefinium_ore",
+    "coffeehouse:deepslate_undefinium_ore"
+  ]
+}

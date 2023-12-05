@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:undefinium_shard_from_smelting_undefinium_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_undefinium_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "coffeehouse:undefinium_ore"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_undefinium_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:undefinium_shard_from_smelting_undefinium_ore"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,4 @@
+// 1.20.2	2023-12-04T21:13:07.9108506	CoffeeHouse/Tags for minecraft:block
+f24262d3cd79d28517039161781b0efa24b4ec28 data\minecraft\tags\blocks\mineable\pickaxe.json
+63173c68cc5e6ee0b8e02f992416c9142ff7847c data\fabric\tags\blocks\needs_tool_level_4.json
+5cb0056b57dbd043c8643ddc616dee9c477475a8 data\minecraft\tags\blocks\needs_stone_tool.json

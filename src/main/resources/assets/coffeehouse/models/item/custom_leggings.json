@@ -1,0 +1,27 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coffeehouse:item/armor/_unidentified/leggings",
+    "layer1": "coffeehouse:item/armor/_unidentified/leggings_overlay"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "model": 0.0
+      },
+      "model": "coffeehouse:item/custom_leggings"
+    },
+    {
+      "predicate": {
+        "model": 0.1
+      },
+      "model": "coffeehouse:item/torch_leggings"
+    },
+    {
+      "predicate": {
+        "model": 0.2
+      },
+      "model": "coffeehouse:item/amethyst_leggings"
+    }
+  ]
+}

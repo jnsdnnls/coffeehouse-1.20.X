@@ -1,0 +1,22 @@
+{
+  "itemgroup.coffeehouse.creativetab": "Coffee House",
+
+  "item.coffeehouse.model": "§8Model: ",
+  "item.coffeehouse.custom_armor": "%d %d",
+  "item.coffeehouse.windigo_spawn_egg": "Windigo Spawn Egg",
+  "item.coffeehouse.raptor_spawn_egg": "Raptor Spawn Egg",
+
+  "item.coffeehouse.undefinium": "Undefinium",
+  "item.coffeehouse.undefinium_shard": "Undefinium Shard",
+
+  "block.coffeehouse.undefinium_block": "Block of Undefinium",
+  "block.coffeehouse.undefinium_ore": "Undefinium Ore",
+  "block.coffeehouse.deepslate_undefinium_ore": "Deepslate Undefinium Ore",
+
+
+  "entity.coffeehouse.windigo": "Windigo",
+  "entity.coffeehouse.raptor": "Raptor",
+
+  "container.coffeehouse.defining_table": "Defining Table",
+  "block.coffeehouse.defining_table": "Defining Table"
+}

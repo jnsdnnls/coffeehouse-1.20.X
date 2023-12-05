@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model":  "coffeehouse:block/defining_table"},
+    "facing=east": { "model":  "coffeehouse:block/defining_table", "y": 90},
+    "facing=south": { "model":  "coffeehouse:block/defining_table", "y": 180},
+    "facing=west": { "model":  "coffeehouse:block/defining_table", "y": 270}
+  }
+}

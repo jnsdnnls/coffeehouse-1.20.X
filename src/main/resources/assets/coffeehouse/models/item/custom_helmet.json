@@ -1,0 +1,27 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "coffeehouse:item/armor/_unidentified/helmet",
+    "layer1": "coffeehouse:item/armor/_unidentified/helmet_overlay"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "model": 0.0
+      },
+      "model": "coffeehouse:item/custom_helmet"
+    },
+    {
+      "predicate": {
+        "model": 0.1
+      },
+      "model": "coffeehouse:item/torch_helmet"
+    },
+    {
+      "predicate": {
+        "model": 0.2
+      },
+      "model": "coffeehouse:item/amethyst_helmet"
+    }
+  ]
+}
