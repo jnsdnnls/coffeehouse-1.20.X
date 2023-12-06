@@ -4,11 +4,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.entity.client.EarthGolemRenderer;
 import net.jdonthatrack.coffeehouse.item.ModItemGroup;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.screen.DefiningTableScreen;
-import net.jdonthatrack.coffeehouse.screen.ModScreenHandlers;
+import net.jdonthatrack.coffeehouse.screen.ModScreenHandlerTypes;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import software.bernie.geckolib.GeckoLib;
 import net.jdonthatrack.coffeehouse.entity.client.RaptorRenderer;
@@ -26,7 +27,8 @@ public class CoffeeHouseClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.RAPTOR, RaptorRenderer::new);
         EntityRendererRegistry.register(ModEntities.WINDIGO, WindigoRenderer::new);
+        EntityRendererRegistry.register(ModEntities.EARTH_GOLEM, EarthGolemRenderer::new);
 
-        HandledScreens.register(ModScreenHandlers.DEFINING_TABLE_SCREEN_HANDLER, DefiningTableScreen::new);
+        HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
     }
 }

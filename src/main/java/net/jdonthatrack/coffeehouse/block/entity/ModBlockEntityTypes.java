@@ -8,13 +8,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-public class ModBlockEntities {
-    public static final BlockEntityType<DefiningTableBlockEntity> DEFINING_TABLE_BLOCK_ENTITY =
-            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "defining_table_be"),
+public class ModBlockEntityTypes {
+    public static final BlockEntityType<DefiningTableBlockEntity> DEFINING_TABLE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "defining_table"),
                     FabricBlockEntityTypeBuilder.create(DefiningTableBlockEntity::new,
                             ModBlocks.DEFINING_TABLE).build());
 
-    public static void registerBlockEntities() {
-        CoffeeHouse.LOGGER.info("Registering Block Entities for " + CoffeeHouse.MOD_ID);
+    public static void registerModBlockEntityTypes() {
+        CoffeeHouse.LOGGER.info("Registering ModBlockEntityTypes for " + CoffeeHouse.MOD_ID);
     }
 }

@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @FunctionalInterface
-public interface ImplementedInventory extends SidedInventory {
+public interface ImplementedInventory extends SidedInventory { // NEVER USED
     /**
      * Gets the item list of this inventory.
      * Must return the same instance every time it's called.

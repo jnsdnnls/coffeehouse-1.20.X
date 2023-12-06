@@ -2,6 +2,7 @@ package net.jdonthatrack.coffeehouse.entity;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
+import net.jdonthatrack.coffeehouse.entity.custom.EarthGolemEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
 import net.minecraft.entity.EntityDimensions;
@@ -19,4 +20,8 @@ public class ModEntities {
     public static final EntityType<WindigoEntity> WINDIGO = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "windigo"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WindigoEntity::new).dimensions(EntityDimensions.fixed(1.5f, 2.2f)).build());
+
+    public static final EntityType<EarthGolemEntity> EARTH_GOLEM = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "earth_golem"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, EarthGolemEntity::new).dimensions(EntityDimensions.fixed(1.5f, 2.6f)).build());
 }
