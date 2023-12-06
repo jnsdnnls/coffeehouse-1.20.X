@@ -9,20 +9,24 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface ArmorItemCommonMethods extends GeoItem {
+    @Override
     AnimatableInstanceCache getAnimatableInstanceCache();
 
+    @Override
     default Supplier<Object> getRenderProvider() {
         return GeoItem.makeRenderer(this);
     }
 
+    @Override
     default void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<ArmorItemCommonMethods>(this, "controller", 0, this::predicate));
     }
 
-    default PlayState predicate(AnimationState animationState) {
+    default PlayState predicate(AnimationState<ArmorItemCommonMethods> animationState) {
         animationState.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
+    @Override
     void createRenderer(Consumer<Object> consumer);
 }

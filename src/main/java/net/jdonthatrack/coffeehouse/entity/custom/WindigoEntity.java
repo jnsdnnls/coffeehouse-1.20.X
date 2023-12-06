@@ -15,7 +15,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
@@ -23,6 +22,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -31,12 +31,10 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
-import java.util.Objects;
-
 public class WindigoEntity extends AbstractHorseEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS;
+    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(WindigoEntity.class, TrackedDataHandlerRegistry.BYTE);
 
     public WindigoEntity(EntityType<? extends WindigoEntity> entityType, World world) {
         super(entityType, world);
@@ -65,19 +63,17 @@ public class WindigoEntity extends AbstractHorseEntity implements GeoEntity {
 
     protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
     }
 
-    protected void initAttributes(Random random) {
-        EntityAttributeInstance var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue((double)getChildHealthBonus(random::nextInt));
-        var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
-        var10000 = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
+    protected void initAttributes(@NotNull Random random) {
+        EntityAttributeInstance attributeInstance;
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+        attributeInstance.setBaseValue(getChildHealthBonus(random::nextInt));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        attributeInstance.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
+        attributeInstance.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
     }
 
     protected void initDataTracker() {
@@ -86,15 +82,15 @@ public class WindigoEntity extends AbstractHorseEntity implements GeoEntity {
     }
 
     public boolean getHorseFlag(int bitmask) {
-        return ((Byte)this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
+        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
     }
 
     protected void setHorseFlag(int bitmask, boolean flag) {
-        byte b = (Byte)this.dataTracker.get(HORSE_FLAGS);
+        byte horseFlags = this.dataTracker.get(HORSE_FLAGS);
         if (flag) {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b | bitmask));
+            this.dataTracker.set(HORSE_FLAGS, (byte)(horseFlags | bitmask));
         } else {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b & ~bitmask));
+            this.dataTracker.set(HORSE_FLAGS, (byte)(horseFlags & ~bitmask));
         }
 
     }
@@ -153,9 +149,5 @@ public class WindigoEntity extends AbstractHorseEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    static {
-        HORSE_FLAGS = DataTracker.registerData(AbstractHorseEntity.class, TrackedDataHandlerRegistry.BYTE);
     }
 }

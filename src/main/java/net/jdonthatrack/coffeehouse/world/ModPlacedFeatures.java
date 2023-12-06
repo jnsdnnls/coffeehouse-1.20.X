@@ -14,8 +14,6 @@ import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 
 import java.util.List;
 
-import static net.jdonthatrack.coffeehouse.world.ModOrePlacement.modifiersWithCount;
-
 public class ModPlacedFeatures {
 
     public static final RegistryKey<PlacedFeature> UNDEFINIUM_ORE_PLACED_KEY = registerKey("ruby_ore_placed");

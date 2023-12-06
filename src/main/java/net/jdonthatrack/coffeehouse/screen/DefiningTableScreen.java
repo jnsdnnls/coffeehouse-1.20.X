@@ -3,13 +3,13 @@ package net.jdonthatrack.coffeehouse.screen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
+import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -58,10 +58,10 @@ public class DefiningTableScreen
         int k = (int)(41.0f * this.scrollAmount);
         Identifier scrollBarTexture = this.shouldScroll() ? SCROLLER_TEXTURE : SCROLLER_DISABLED_TEXTURE;
 //        context.drawGuiTexture(scrollBarTexture, x + 119, y + 15 + k, 12, 15);
-        context.drawGuiTexture(scrollBarTexture, x + 156, y + 7  + k, 12, 15);
-        int l = this.x + 52;
-        int m = this.y + 14;
-        int n = this.scrollOffset + 12;
+        context.drawGuiTexture(scrollBarTexture, x + 156, y + 7 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        int l = this.x + RECIPE_LIST_OFFSET_X;
+        int m = this.y + RECIPE_LIST_OFFSET_Y;
+        int n = this.scrollOffset + SCROLLBAR_WIDTH;
         this.renderRecipeBackground(context, mouseX, mouseY, l, m, n);
         this.renderRecipeIcons(context, l, m, n);
     }
@@ -70,15 +70,15 @@ public class DefiningTableScreen
     protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
         super.drawMouseoverTooltip(context, x, y);
         if (this.canCraft) {
-            int i = this.x + 52;
-            int j = this.y + 14;
-            int k = this.scrollOffset + 12;
-            List<RecipeEntry<StonecuttingRecipe>> availableRecipes = this.handler.getAvailableRecipes();
+            int i = this.x + RECIPE_LIST_OFFSET_X;
+            int j = this.y + RECIPE_LIST_OFFSET_Y;
+            int k = this.scrollOffset + SCROLLBAR_WIDTH;
+            List<RecipeEntry<DefiningRecipe>> availableRecipes = this.handler.getAvailableRecipes();
             for (int l = this.scrollOffset; l < k && l < this.handler.getAvailableRecipeCount(); ++l) {
                 int m = l - this.scrollOffset;
-                int n = i + m % 4 * 16;
-                int o = j + m / 4 * 18 + 2;
-                if (x < n || x >= n + 16 || y < o || y >= o + 18) continue;
+                int n = i + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
+                int o = j + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT + 2;
+                if (x < n || x >= n + RECIPE_ENTRY_WIDTH || y < o || y >= o + RECIPE_ENTRY_HEIGHT) continue;
                 context.drawItemTooltip(this.textRenderer, availableRecipes.get(l).value().getResult(this.client.world.getRegistryManager()), x, y);
             }
         }
@@ -87,21 +87,21 @@ public class DefiningTableScreen
     private void renderRecipeBackground(DrawContext context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
-            int k = x + j % 4 * 16;
-            int l = j / 4;
-            int m = y + l * 18 + 2;
-            Identifier identifier = i == this.handler.getSelectedRecipe() ? RECIPE_SELECTED_TEXTURE : (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18 ? RECIPE_HIGHLIGHTED_TEXTURE : RECIPE_TEXTURE);
-            context.drawGuiTexture(identifier, k, m - 1, 16, 18);
+            int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
+            int l = j / RECIPE_LIST_COLUMNS;
+            int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
+            Identifier identifier = i == this.handler.getSelectedRecipe() ? RECIPE_SELECTED_TEXTURE : (mouseX >= k && mouseY >= m && mouseX < k + RECIPE_ENTRY_WIDTH && mouseY < m + RECIPE_ENTRY_HEIGHT ? RECIPE_HIGHLIGHTED_TEXTURE : RECIPE_TEXTURE);
+            context.drawGuiTexture(identifier, k, m - 1, RECIPE_ENTRY_WIDTH, RECIPE_ENTRY_HEIGHT);
         }
     }
 
     private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
-        List<RecipeEntry<StonecuttingRecipe>> list = this.handler.getAvailableRecipes();
+        List<RecipeEntry<DefiningRecipe>> list = this.handler.getAvailableRecipes();
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
-            int k = x + j % 4 * 16;
-            int l = j / 4;
-            int m = y + l * 18 + 2;
+            int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
+            int l = j / RECIPE_LIST_COLUMNS;
+            int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
             context.drawItem(list.get(i).value().getResult(this.client.world.getRegistryManager()), k, m);
         }
     }
@@ -110,13 +110,13 @@ public class DefiningTableScreen
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = false;
         if (this.canCraft) {
-            int i = this.x + 52;
-            int j = this.y + 14;
-            int k = this.scrollOffset + 12;
+            int i = this.x + RECIPE_LIST_OFFSET_X;
+            int j = this.y + RECIPE_LIST_OFFSET_Y;
+            int k = this.scrollOffset + SCROLLBAR_WIDTH;
             for (int l = this.scrollOffset; l < k; ++l) {
                 int m = l - this.scrollOffset;
-                double d = mouseX - (double)(i + m % 4 * 16);
-                double e = mouseY - (double)(j + m / 4 * 18);
+                double d = mouseX - (double)(i + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH);
+                double e = mouseY - (double)(j + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT);
                 if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, l)) continue;
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
                 this.client.interactionManager.clickButton(this.handler.syncId, l);
@@ -124,7 +124,7 @@ public class DefiningTableScreen
             }
             i = this.x + 119;
             j = this.y + 9;
-            if (mouseX >= (double)i && mouseX < (double)(i + 12) && mouseY >= (double)j && mouseY < (double)(j + 54)) {
+            if (mouseX >= i && mouseX < i + SCROLLBAR_WIDTH && mouseY >= j && mouseY < j + SCROLLBAR_AREA_HEIGHT) {
                 this.mouseClicked = true;
             }
         }
@@ -134,11 +134,11 @@ public class DefiningTableScreen
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int i = this.y + 14;
-            int j = i + 54;
+            int i = this.y + RECIPE_LIST_OFFSET_Y;
+            int j = i + SCROLLBAR_AREA_HEIGHT;
             this.scrollAmount = ((float)mouseY - (float)i - 7.5f) / ((float)(j - i) - 15.0f);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
-            this.scrollOffset = (int)((double)(this.scrollAmount * (float)this.getMaxScroll()) + 0.5) * 4;
+            this.scrollOffset = (int)(this.scrollAmount * this.getMaxScroll() + 0.5) * RECIPE_LIST_COLUMNS;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -150,17 +150,17 @@ public class DefiningTableScreen
             int i = this.getMaxScroll();
             float f = (float)verticalAmount / (float)i;
             this.scrollAmount = MathHelper.clamp(this.scrollAmount - f, 0.0f, 1.0f);
-            this.scrollOffset = (int)((double)(this.scrollAmount * (float)i) + 0.5) * 4;
+            this.scrollOffset = (int) ((this.scrollAmount * i + 0.5) * RECIPE_LIST_COLUMNS);
         }
         return true;
     }
 
     private boolean shouldScroll() {
-        return this.canCraft && this.handler.getAvailableRecipeCount() > 12;
+        return this.canCraft && this.handler.getAvailableRecipeCount() > SCROLLBAR_WIDTH;
     }
 
     protected int getMaxScroll() {
-        return (this.handler.getAvailableRecipeCount() + 4 - 1) / 4 - 3;
+        return (this.handler.getAvailableRecipeCount() + RECIPE_LIST_COLUMNS - 1) / RECIPE_LIST_COLUMNS - RECIPE_LIST_ROWS;
     }
 
     private void onInventoryChange() {

@@ -1,25 +1,19 @@
 package net.jdonthatrack.coffeehouse;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
-import net.jdonthatrack.coffeehouse.item.ModItemGroup;
-import net.jdonthatrack.coffeehouse.item.ModItems;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
-import net.jdonthatrack.coffeehouse.screen.DefiningTableScreen;
-import net.jdonthatrack.coffeehouse.screen.ModScreenHandlerTypes;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import software.bernie.geckolib.GeckoLib;
 import net.jdonthatrack.coffeehouse.entity.client.RaptorRenderer;
 import net.jdonthatrack.coffeehouse.entity.client.WindigoRenderer;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.minecraft.client.render.RenderLayer;
+import software.bernie.geckolib.GeckoLib;
 
 public class CoffeeHouseClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ModItemGroup.registerItemGroups();
-        ModItems.registerModItems();
-        ModBlocks.registerModBlocks();
         DynamicArmorItem.registerModelPredicates();
 
         GeckoLib.initialize();
@@ -27,6 +21,6 @@ public class CoffeeHouseClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.RAPTOR, RaptorRenderer::new);
         EntityRendererRegistry.register(ModEntities.WINDIGO, WindigoRenderer::new);
 
-        HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DEFINING_TABLE, RenderLayer.getCutout());
     }
 }

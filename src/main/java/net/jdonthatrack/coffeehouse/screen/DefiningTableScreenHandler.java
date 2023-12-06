@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,8 +14,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -36,7 +35,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
     private final Property selectedRecipe = Property.create();
     private final World world;
-    private List<RecipeEntry<StonecuttingRecipe>> availableRecipes = Lists.newArrayList();
+    private List<RecipeEntry<DefiningRecipe>> availableRecipes = Lists.newArrayList();
     private ItemStack inputStack = ItemStack.EMPTY;
     long lastTakeTime;
     final Slot inputSlot;
@@ -110,7 +109,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
             }
 
             private List<ItemStack> getInputStacks() {
-                return List.of(DefiningTableScreenHandler.this.inputSlot.getStack());
+                return List.of(DefiningTableScreenHandler.this.inputSlot.getStack(), DefiningTableScreenHandler.this.currencySlot.getStack());
             }
         });
         for (i = 0; i < 3; ++i) {
@@ -128,7 +127,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         return this.selectedRecipe.get();
     }
 
-    public List<RecipeEntry<StonecuttingRecipe>> getAvailableRecipes() {
+    public List<RecipeEntry<DefiningRecipe>> getAvailableRecipes() {
         return this.availableRecipes;
     }
 
@@ -137,7 +136,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     public boolean canCraft() {
-        return this.inputSlot.hasStack() && !this.availableRecipes.isEmpty();
+        return this.inputSlot.hasStack() && this.currencySlot.hasStack() && !this.availableRecipes.isEmpty();
     }
 
     @Override
@@ -172,13 +171,13 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         this.selectedRecipe.set(-1);
         this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
         if (!stack.isEmpty()) {
-            this.availableRecipes = this.world.getRecipeManager().getAllMatches(RecipeType.STONECUTTING, input, this.world);
+            this.availableRecipes = this.world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, input, this.world);
         }
     }
 
     void populateResult() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.selectedRecipe.get())) {
-            RecipeEntry<StonecuttingRecipe> recipeEntry = this.availableRecipes.get(this.selectedRecipe.get());
+            RecipeEntry<DefiningRecipe> recipeEntry = this.availableRecipes.get(this.selectedRecipe.get());
             ItemStack itemStack = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
             if (itemStack.isItemEnabled(this.world.getEnabledFeatures())) {
                 this.output.setLastRecipe(recipeEntry);
@@ -207,36 +206,36 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slotIndex) {
+    public ItemStack quickMove(PlayerEntity player, int slotIndex) { // TODO: 7/12/2023 ALLOW SHIFT-CLICKING CORRECT ITEMS INTO CORRECT SLOTS
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
         if (slot.hasStack()) {
-            ItemStack itemStack2 = slot.getStack();
-            Item item = itemStack2.getItem();
-            itemStack = itemStack2.copy();
-            if (slotIndex == 1) {
-                item.onCraft(itemStack2, player.getWorld(), player);
-                if (!this.insertItem(itemStack2, 2, 38, true)) {
+            ItemStack stackInSlot = slot.getStack();
+            Item item = stackInSlot.getItem();
+            itemStack = stackInSlot.copy();
+            if (slotIndex == OUTPUT_ID) { // TAKE FROM OUTPUT
+                item.onCraft(stackInSlot, player.getWorld(), player);
+                if (!this.insertItem(stackInSlot, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onQuickTransfer(itemStack2, itemStack);
-            } else if (slotIndex == 0 ?
-                    !this.insertItem(itemStack2, 2, 38, false) :
-                    (this.world.getRecipeManager().getFirstMatch(ModRecipeTypes.DEFINING, new SimpleInventory(itemStack2), this.world).isPresent() ?
-                            !this.insertItem(itemStack2, 0, 1, false) :
+                slot.onQuickTransfer(stackInSlot, itemStack);
+            } else if (slotIndex == INPUT_ID ? // TAKE FROM INPUT
+                    !this.insertItem(stackInSlot, 2, 38, false) :
+                    (this.world.getRecipeManager().getFirstMatch(ModRecipeTypes.DEFINING, new SimpleInventory(stackInSlot), this.world).isPresent() ?
+                            !this.insertItem(stackInSlot, 0, 1, false) :
                             (slotIndex >= 2 && slotIndex < 29 ?
-                                    !this.insertItem(itemStack2, 29, 38, false) :
-                                    slotIndex >= 29 && slotIndex < 38 && !this.insertItem(itemStack2, 2, 29, false)))) {
+                                    !this.insertItem(stackInSlot, 29, 38, false) :
+                                    slotIndex >= 29 && slotIndex < 38 && !this.insertItem(stackInSlot, 2, 29, false)))) {
                 return ItemStack.EMPTY;
             }
-            if (itemStack2.isEmpty()) {
+            if (stackInSlot.isEmpty()) {
                 slot.setStack(ItemStack.EMPTY);
             }
             slot.markDirty();
-            if (itemStack2.getCount() == itemStack.getCount()) {
+            if (stackInSlot.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
             }
-            slot.onTakeItem(player, itemStack2);
+            slot.onTakeItem(player, stackInSlot);
             this.sendContentUpdates();
         }
         return itemStack;
@@ -247,5 +246,6 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         super.onClosed(player);
         this.output.removeStack(1);
         this.context.run((world, pos) -> this.dropInventory(player, this.input));
+        this.context.run((world, pos) -> this.dropInventory(player, this.currency));
     }
 }
