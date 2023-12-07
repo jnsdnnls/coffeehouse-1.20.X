@@ -22,9 +22,10 @@ public class ModItems {
             new SpawnEggItem(ModEntities.RAPTOR, 0x4BFDFB , 0xfddc4b, new FabricItemSettings() ));
     public static final Item WINDIGO_SPAWN_EGG = registerItem("windigo_spawn_egg",
             new SpawnEggItem(ModEntities.WINDIGO, 0x6D1F1E, 0xFDEFD4, new FabricItemSettings() ));
-
     public static final Item EARTH_GOLEM_SPAWN_EGG = registerItem("earth_golem_spawn_egg",
             new SpawnEggItem(ModEntities.EARTH_GOLEM, 0x412e24, 0x17dd62, new FabricItemSettings() ));
+    public static final Item DIRE_WOLF_SPAWN_EGG = registerItem("dire_wolf_spawn_egg",
+            new SpawnEggItem(ModEntities.DIRE_WOLF, 0x412e24, 0x17dd62, new FabricItemSettings() ));
     public static final Item CUSTOM_HELMET = registerItem("custom_helmet",
             new DynamicArmorItem(ModArmorMaterials.CUSTOM, ArmorItem.Type.HELMET, new FabricItemSettings()));
     public static final Item CUSTOM_CHESTPLATE = registerItem("custom_chestplate",

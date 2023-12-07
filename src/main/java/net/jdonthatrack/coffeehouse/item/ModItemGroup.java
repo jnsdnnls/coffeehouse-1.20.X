@@ -14,7 +14,7 @@ public class ModItemGroup {
     public static ItemGroup COFFEEHOUSE  = Registry.register(Registries.ITEM_GROUP, new Identifier(CoffeeHouse.MOD_ID, "coffeehouse"),
         FabricItemGroup.builder()
             .displayName(Text.translatable("itemgroup.coffeehouse.creativetab"))
-            .icon(() -> new ItemStack(ModItems.CUSTOM_HELMET)).entries((displayContext, entries) -> {
+            .icon(() -> new ItemStack(ModItems.UNDEFINIUM)).entries((displayContext, entries) -> {
                     entries.add(ModItems.CUSTOM_HELMET);
                     entries.add(ModItems.CUSTOM_CHESTPLATE);
                     entries.add(ModItems.CUSTOM_LEGGINGS);

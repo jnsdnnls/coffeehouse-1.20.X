@@ -23,6 +23,7 @@ public class CoffeeHouse implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(ModEntities.RAPTOR, RaptorEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.WINDIGO, WindigoEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.EARTH_GOLEM, WindigoEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.DIRE_WOLF, WindigoEntity.setAttributes());
 
 		ModWorldGeneration.generatModWorldGen();
 		ModBlockEntityTypes.registerModBlockEntityTypes();

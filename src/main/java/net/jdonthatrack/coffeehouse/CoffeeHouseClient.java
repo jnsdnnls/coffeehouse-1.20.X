@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.entity.client.DireWolfRenderer;
 import net.jdonthatrack.coffeehouse.entity.client.EarthGolemRenderer;
 import net.jdonthatrack.coffeehouse.item.ModItemGroup;
 import net.jdonthatrack.coffeehouse.item.ModItems;
@@ -28,6 +29,7 @@ public class CoffeeHouseClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.RAPTOR, RaptorRenderer::new);
         EntityRendererRegistry.register(ModEntities.WINDIGO, WindigoRenderer::new);
         EntityRendererRegistry.register(ModEntities.EARTH_GOLEM, EarthGolemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.DIRE_WOLF, DireWolfRenderer::new);
 
         HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
     }
