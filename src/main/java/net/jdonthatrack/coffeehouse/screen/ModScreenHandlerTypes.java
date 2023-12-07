@@ -19,7 +19,7 @@ public class ModScreenHandlerTypes {
         return Registry.register(Registries.SCREEN_HANDLER, new Identifier(CoffeeHouse.MOD_ID, id), new ScreenHandlerType<T>(factory, FeatureFlags.FEATURE_MANAGER.featureSetOf(requiredFeatures)));
     }
 
-    public static void registerScreenHandlers() {
-        CoffeeHouse.LOGGER.info("Registering Screen Handlers " + CoffeeHouse.MOD_ID);
+    public static void registerModScreenHandlerTypes() {
+        CoffeeHouse.LOGGER.info("Registering ModScreenHandlerTypes " + CoffeeHouse.MOD_ID);
     }
 }

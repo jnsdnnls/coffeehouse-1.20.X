@@ -10,7 +10,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class ModItemGroup {
+public class ModItemGroups {
     public static ItemGroup COFFEEHOUSE  = Registry.register(Registries.ITEM_GROUP, new Identifier(CoffeeHouse.MOD_ID, "coffeehouse"),
         FabricItemGroup.builder()
             .displayName(Text.translatable("itemgroup.coffeehouse.creativetab"))

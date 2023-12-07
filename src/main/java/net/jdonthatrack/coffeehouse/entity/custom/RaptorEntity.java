@@ -15,7 +15,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
@@ -35,8 +34,9 @@ import java.util.Objects;
 
 public class RaptorEntity extends AbstractHorseEntity implements GeoEntity {
 
+    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(RaptorEntity.class, TrackedDataHandlerRegistry.BYTE);
+
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS;
 
     public RaptorEntity(EntityType<? extends RaptorEntity> entityType, World world) {
         super(entityType, world);
@@ -48,6 +48,7 @@ public class RaptorEntity extends AbstractHorseEntity implements GeoEntity {
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 53.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.22499999403953552);
     }
+
     protected void initGoals() {
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.2));
         this.goalSelector.add(1, new HorseBondWithPlayerGoal(this, 1.2));
@@ -65,13 +66,13 @@ public class RaptorEntity extends AbstractHorseEntity implements GeoEntity {
 
     protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
     }
 
     protected void initAttributes(Random random) {
         EntityAttributeInstance var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
         Objects.requireNonNull(random);
-        var10000.setBaseValue((double)getChildHealthBonus(random::nextInt));
+        var10000.setBaseValue(getChildHealthBonus(random::nextInt));
         var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
         Objects.requireNonNull(random);
         var10000.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
@@ -82,19 +83,19 @@ public class RaptorEntity extends AbstractHorseEntity implements GeoEntity {
 
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(HORSE_FLAGS, (byte)0);
+        this.dataTracker.startTracking(HORSE_FLAGS, (byte) 0);
     }
 
     public boolean getHorseFlag(int bitmask) {
-        return ((Byte)this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
+        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
     }
 
     protected void setHorseFlag(int bitmask, boolean flag) {
-        byte b = (Byte)this.dataTracker.get(HORSE_FLAGS);
+        byte horseFlags = this.dataTracker.get(HORSE_FLAGS);
         if (flag) {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b | bitmask));
+            this.dataTracker.set(HORSE_FLAGS, (byte) (horseFlags | bitmask));
         } else {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b & ~bitmask));
+            this.dataTracker.set(HORSE_FLAGS, (byte) (horseFlags & ~bitmask));
         }
 
     }
@@ -146,16 +147,12 @@ public class RaptorEntity extends AbstractHorseEntity implements GeoEntity {
     protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
         super.updatePassengerPosition(passenger, positionUpdater);
         if (passenger instanceof LivingEntity) {
-            ((LivingEntity)passenger).bodyYaw = this.bodyYaw;
+            ((LivingEntity) passenger).bodyYaw = this.bodyYaw;
         }
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    static {
-        HORSE_FLAGS = DataTracker.registerData(AbstractHorseEntity.class, TrackedDataHandlerRegistry.BYTE);
     }
 }
