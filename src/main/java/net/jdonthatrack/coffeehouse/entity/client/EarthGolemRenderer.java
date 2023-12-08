@@ -2,7 +2,6 @@ package net.jdonthatrack.coffeehouse.entity.client;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.entity.custom.EarthGolemEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;

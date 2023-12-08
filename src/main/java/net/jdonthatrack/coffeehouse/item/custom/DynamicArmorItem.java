@@ -1,7 +1,6 @@
 package net.jdonthatrack.coffeehouse.item.custom;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
-import net.jdonthatrack.coffeehouse.item.DynamicModelItem;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.item.TooltipContext;
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class DynamicArmorItem extends ArmorItem implements GeoItem, DynamicModelItem, ArmorItemCommonMethods {
+public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCommonMethods {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     // ARMOR ITEM

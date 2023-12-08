@@ -36,7 +36,7 @@ import java.util.Objects;
 public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS;
+    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(EarthGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
 
     public EarthGolemEntity(EntityType<? extends EarthGolemEntity> entityType, World world) {
         super(entityType, world);
@@ -65,19 +65,17 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
     protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE}), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
     }
 
     protected void initAttributes(Random random) {
-        EntityAttributeInstance var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue((double)getChildHealthBonus(random::nextInt));
-        var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
-        var10000 = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
+        EntityAttributeInstance attributeInstance;
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+        attributeInstance.setBaseValue(getChildHealthBonus(random::nextInt));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        attributeInstance.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
+        attributeInstance.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
     }
 
     protected void initDataTracker() {
@@ -90,7 +88,7 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
     }
 
     protected void setHorseFlag(int bitmask, boolean flag) {
-        byte b = (Byte)this.dataTracker.get(HORSE_FLAGS);
+        byte b = this.dataTracker.get(HORSE_FLAGS);
         if (flag) {
             this.dataTracker.set(HORSE_FLAGS, (byte)(b | bitmask));
         } else {
@@ -153,9 +151,5 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    static {
-        HORSE_FLAGS = DataTracker.registerData(AbstractHorseEntity.class, TrackedDataHandlerRegistry.BYTE);
     }
 }

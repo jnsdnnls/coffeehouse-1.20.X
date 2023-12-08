@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.entity.client.DireWolfRenderer;
+import net.jdonthatrack.coffeehouse.entity.client.EarthGolemRenderer;
 import net.jdonthatrack.coffeehouse.entity.client.RaptorRenderer;
 import net.jdonthatrack.coffeehouse.entity.client.WindigoRenderer;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;

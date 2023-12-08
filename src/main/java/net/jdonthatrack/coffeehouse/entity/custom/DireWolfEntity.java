@@ -36,7 +36,7 @@ import java.util.Objects;
 public class DireWolfEntity extends AbstractHorseEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS;
+    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(DireWolfEntity.class, TrackedDataHandlerRegistry.BYTE);
 
     public DireWolfEntity(EntityType<? extends DireWolfEntity> entityType, World world) {
         super(entityType, world);
@@ -69,15 +69,13 @@ public class DireWolfEntity extends AbstractHorseEntity implements GeoEntity {
     }
 
     protected void initAttributes(Random random) {
-        EntityAttributeInstance var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue((double)getChildHealthBonus(random::nextInt));
-        var10000 = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
-        var10000 = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
-        Objects.requireNonNull(random);
-        var10000.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
+        EntityAttributeInstance attributeInstance;
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+        attributeInstance.setBaseValue(getChildHealthBonus(random::nextInt));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        attributeInstance.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
+        attributeInstance = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
+        attributeInstance.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
     }
 
     protected void initDataTracker() {
@@ -86,11 +84,11 @@ public class DireWolfEntity extends AbstractHorseEntity implements GeoEntity {
     }
 
     public boolean getHorseFlag(int bitmask) {
-        return ((Byte)this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
+        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
     }
 
     protected void setHorseFlag(int bitmask, boolean flag) {
-        byte b = (Byte)this.dataTracker.get(HORSE_FLAGS);
+        byte b = this.dataTracker.get(HORSE_FLAGS);
         if (flag) {
             this.dataTracker.set(HORSE_FLAGS, (byte)(b | bitmask));
         } else {
@@ -153,9 +151,5 @@ public class DireWolfEntity extends AbstractHorseEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    static {
-        HORSE_FLAGS = DataTracker.registerData(AbstractHorseEntity.class, TrackedDataHandlerRegistry.BYTE);
     }
 }
