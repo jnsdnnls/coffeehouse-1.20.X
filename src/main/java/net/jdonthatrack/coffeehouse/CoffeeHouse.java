@@ -27,6 +27,8 @@ public class CoffeeHouse implements ModInitializer {
 	public void onInitialize() {
 		FabricDefaultAttributeRegistry.register(ModEntities.RAPTOR, RaptorEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.WINDIGO, WindigoEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.EARTH_GOLEM, WindigoEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.DIRE_WOLF, WindigoEntity.setAttributes());
 
 		ModWorldGeneration.generateModWorldGen();
 		ModBlockEntityTypes.registerModBlockEntityTypes();
@@ -38,7 +40,5 @@ public class CoffeeHouse implements ModInitializer {
 		ModScreenHandlerTypes.registerModScreenHandlerTypes();
 		ModRecipeTypes.registerModRecipeTypes();
 		ModRecipeSerializers.registerModRecipeSerializers();
-
-		HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
 	}
 }
