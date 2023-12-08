@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -79,7 +78,7 @@ public class DefiningTableScreen
                 int n = i + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
                 int o = j + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT + 2;
                 if (x < n || x >= n + RECIPE_ENTRY_WIDTH || y < o || y >= o + RECIPE_ENTRY_HEIGHT) continue;
-                context.drawItemTooltip(this.textRenderer, availableRecipes.get(l).value().getResult(this.client.world.getRegistryManager()), x, y);
+                context.drawItemTooltip(this.textRenderer, availableRecipes.get(l).value().getOutput(this.handler.inputSlot.getStack()), x, y);
             }
         }
     }
@@ -90,19 +89,23 @@ public class DefiningTableScreen
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = j / RECIPE_LIST_COLUMNS;
             int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
-            Identifier identifier = i == this.handler.getSelectedRecipe() ? RECIPE_SELECTED_TEXTURE : (mouseX >= k && mouseY >= m && mouseX < k + RECIPE_ENTRY_WIDTH && mouseY < m + RECIPE_ENTRY_HEIGHT ? RECIPE_HIGHLIGHTED_TEXTURE : RECIPE_TEXTURE);
+            Identifier identifier = i == this.handler.getSelectedRecipe() ?
+                    RECIPE_SELECTED_TEXTURE :
+                    (mouseX >= k && mouseY >= m && mouseX < k + RECIPE_ENTRY_WIDTH && mouseY < m + RECIPE_ENTRY_HEIGHT ?
+                            RECIPE_HIGHLIGHTED_TEXTURE :
+                            RECIPE_TEXTURE);
             context.drawGuiTexture(identifier, k, m - 1, RECIPE_ENTRY_WIDTH, RECIPE_ENTRY_HEIGHT);
         }
     }
 
     private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
-        List<RecipeEntry<DefiningRecipe>> list = this.handler.getAvailableRecipes();
+        List<RecipeEntry<DefiningRecipe>> availableRecipes = this.handler.getAvailableRecipes();
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = j / RECIPE_LIST_COLUMNS;
             int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
-            context.drawItem(list.get(i).value().getResult(this.client.world.getRegistryManager()), k, m);
+            context.drawItem(availableRecipes.get(i).value().getOutput(this.handler.inputSlot.getStack()), k, m);
         }
     }
 
@@ -118,7 +121,7 @@ public class DefiningTableScreen
                 double d = mouseX - (double)(i + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH);
                 double e = mouseY - (double)(j + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT);
                 if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, l)) continue;
-                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
+                this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
                 this.client.interactionManager.clickButton(this.handler.syncId, l);
                 return true;
             }

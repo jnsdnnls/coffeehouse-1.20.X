@@ -74,7 +74,6 @@ public class DefiningTableBlock extends BlockWithEntity {
     @Nullable
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
         return new DefiningTableBlockEntity(pos, state, world);
-//        return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, player) -> new DefiningTableScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos)), TITLE);
     }
 
     @Override

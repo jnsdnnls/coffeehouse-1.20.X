@@ -3,8 +3,10 @@ package net.jdonthatrack.coffeehouse.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
+import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -16,6 +18,8 @@ import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 
 public class DefiningRecipe implements Recipe<Inventory> {
+    public static final Item[] CUSTOM_ARMOR = { ModItems.CUSTOM_HELMET, ModItems.CUSTOM_CHESTPLATE, ModItems.CUSTOM_LEGGINGS, ModItems.CUSTOM_BOOTS };
+    protected static final double FRAME_TIME = 0.5;
     protected final int price;
     protected final String model;
     private final RecipeType<?> type;
@@ -36,8 +40,10 @@ public class DefiningRecipe implements Recipe<Inventory> {
 
     @Override
     public boolean matches(Inventory inventory, World world) {
-        ItemStack dynamicArmorItemStack = inventory.getStack(0);
-        return dynamicArmorItemStack.getItem() instanceof DynamicArmorItem && inventory.getStack(1).getCount() >= price;
+        ItemStack inputStack = inventory.getStack(0);
+        ItemStack outputStack = inventory.getStack(1);
+        ItemStack currencyStack = inventory.getStack(2);
+        return inputStack.getItem() instanceof DynamicArmorItem && currencyStack.getCount() >= price;
     }
 
     @Override
@@ -60,21 +66,30 @@ public class DefiningRecipe implements Recipe<Inventory> {
         return this.group;
     }
 
-//    @Override
-//    public ItemStack getResult(DynamicRegistryManager registryManager) {
-//        return new ItemStack()
-//        return this.modelName;
-//    }
-
     @Override
     public ItemStack getResult(DynamicRegistryManager registryManager) {
-        return null;
+        int index = (int) ((((double) System.nanoTime() / 1e9) % (FRAME_TIME * 4)) / FRAME_TIME); // index 0,1,2,3 changes every FRAME_TIME seconds
+        ItemStack input = new ItemStack(CUSTOM_ARMOR[index]);
+        NbtCompound nbt = input.getOrCreateNbt();
+        nbt.putString("model", model);
+        return input;
     }
 
-//    @Override
+    public int getPrice() {
+        return price;
+    }
+
+    public ItemStack getOutput(ItemStack inputStack) {
+        inputStack = inputStack.copy();
+        NbtCompound nbt = inputStack.getOrCreateNbt();
+        nbt.putString("model", model);
+        return inputStack;
+    }
+
+    //    @Override
 //    public DefaultedList<Ingredient> getIngredients() {
 //        DefaultedList<Ingredient> defaultedList = DefaultedList.of();
-//        defaultedList.add(this.input);
+//        defaultedList.add(this.);
 //        return defaultedList;
 //    }
 
@@ -85,9 +100,7 @@ public class DefiningRecipe implements Recipe<Inventory> {
 
     @Override
     public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
-        NbtCompound nbt = inventory.getStack(0).getOrCreateNbt();
-        nbt.putString("model", model);
-        return inventory.getStack(0);
+        return getOutput(inventory.getStack(0));
     }
 
     public static class Serializer<T extends DefiningRecipe>
