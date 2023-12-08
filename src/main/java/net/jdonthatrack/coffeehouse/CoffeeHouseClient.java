@@ -20,6 +20,8 @@ public class CoffeeHouseClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.RAPTOR, RaptorRenderer::new);
         EntityRendererRegistry.register(ModEntities.WINDIGO, WindigoRenderer::new);
+        EntityRendererRegistry.register(ModEntities.EARTH_GOLEM, EarthGolemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.DIRE_WOLF, DireWolfRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DEFINING_TABLE, RenderLayer.getCutout());
     }
