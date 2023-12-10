@@ -31,9 +31,9 @@ public class DefiningTableScreen
     private static final int RECIPE_LIST_ROWS = 3;
     private static final int RECIPE_ENTRY_WIDTH = 16;
     private static final int RECIPE_ENTRY_HEIGHT = 18;
-    private static final int SCROLLBAR_AREA_HEIGHT = 54;
-    private static final int RECIPE_LIST_OFFSET_X = 52;
-    private static final int RECIPE_LIST_OFFSET_Y = 14;
+    private static final int SCROLLBAR_AREA_HEIGHT = 48;
+    private static final int RECIPE_LIST_OFFSET_X = 63;
+    private static final int RECIPE_LIST_OFFSET_Y = 29;
     private float scrollAmount;
     private boolean mouseClicked;
     private int scrollOffset;
@@ -57,7 +57,7 @@ public class DefiningTableScreen
         int k = (int)(41.0f * this.scrollAmount);
         Identifier scrollBarTexture = this.shouldScroll() ? SCROLLER_TEXTURE : SCROLLER_DISABLED_TEXTURE;
 //        context.drawGuiTexture(scrollBarTexture, x + 119, y + 15 + k, 12, 15);
-        context.drawGuiTexture(scrollBarTexture, x + 156, y + 7 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        context.drawGuiTexture(scrollBarTexture, x + 156, y + 30 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
         int l = this.x + RECIPE_LIST_OFFSET_X;
         int m = this.y + RECIPE_LIST_OFFSET_Y;
         int n = this.scrollOffset + SCROLLBAR_WIDTH;

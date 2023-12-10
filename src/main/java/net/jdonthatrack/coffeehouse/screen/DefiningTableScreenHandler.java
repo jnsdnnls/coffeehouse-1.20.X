@@ -74,19 +74,19 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         int i;
         this.context = context;
         this.world = playerInventory.player.getWorld();
-        this.currencySlot = this.addSlot(new Slot(this.currency, 0, 98, 61) {
+        this.currencySlot = this.addSlot(new Slot(this.currency, 0, 111, 7) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(ModItems.UNDEFINIUM);
             }
         });
-        this.inputSlot = this.addSlot(new Slot(this.input, 0, 69, 61) {
+        this.inputSlot = this.addSlot(new Slot(this.input, 0, 84, 7) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return stack.getItem() instanceof DynamicArmorItem;
             }
         });
-        this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 61) {
+        this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 7) {
 
             @Override
             public boolean canInsert(ItemStack stack) {
@@ -202,6 +202,9 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.selectedRecipe.get())) {
             RecipeEntry<DefiningRecipe> recipeEntry = this.availableRecipes.get(this.selectedRecipe.get());
             ItemStack itemStack = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
+            ItemStack itemStack2 = recipeEntry.value().getOutput(this.inputSlot.getStack());
+//            CoffeeHouse.LOGGER.info("recipeEntry.value().craft(this.input, this.world.getRegistryManager()) = " + itemStack);
+//            CoffeeHouse.LOGGER.info("recipeEntry.value().getOutput(this.inputSlot.getStack()) = " + itemStack2);
             if (itemStack.isItemEnabled(this.world.getEnabledFeatures())) {
                 this.output.setLastRecipe(recipeEntry);
                 this.outputSlot.setStackNoCallbacks(itemStack);
