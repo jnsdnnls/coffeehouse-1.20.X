@@ -3,18 +3,26 @@ package net.jdonthatrack.coffeehouse.screen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class DefiningTableScreen
@@ -38,6 +46,7 @@ public class DefiningTableScreen
     private boolean mouseClicked;
     private int scrollOffset;
     private boolean canCraft;
+    @Nullable private ArmorStandEntity armorStand;
 
     public DefiningTableScreen(DefiningTableScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -46,9 +55,25 @@ public class DefiningTableScreen
     }
 
     @Override
+    protected void init() {
+        super.init();
+        titleY = 1000;
+        this.armorStand = new ArmorStandEntity(this.client.world, 0.0, 0.0, 0.0);
+        this.armorStand.setHideBasePlate(true);
+        this.armorStand.setShowArms(true);
+        this.equipArmorStand(this.handler.outputSlot.getStack());
+    }
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
+    }
+
+    public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+        if (slotId == 1) {
+            this.equipArmorStand(stack);
+        }
     }
 
     @Override
@@ -57,12 +82,13 @@ public class DefiningTableScreen
         int k = (int)(41.0f * this.scrollAmount);
         Identifier scrollBarTexture = this.shouldScroll() ? SCROLLER_TEXTURE : SCROLLER_DISABLED_TEXTURE;
 //        context.drawGuiTexture(scrollBarTexture, x + 119, y + 15 + k, 12, 15);
-        context.drawGuiTexture(scrollBarTexture, x + 156, y + 30 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        context.drawGuiTexture(scrollBarTexture, x + 156, y + 7 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
         int l = this.x + RECIPE_LIST_OFFSET_X;
         int m = this.y + RECIPE_LIST_OFFSET_Y;
         int n = this.scrollOffset + SCROLLBAR_WIDTH;
         this.renderRecipeBackground(context, mouseX, mouseY, l, m, n);
         this.renderRecipeIcons(context, l, m, n);
+        drawEntity(context, x, y, x + 65, y + 75, 25, 0.0625F, mouseX, mouseY, this.armorStand);
     }
 
     @Override
@@ -123,6 +149,7 @@ public class DefiningTableScreen
                 if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, l)) continue;
                 this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
                 this.client.interactionManager.clickButton(this.handler.syncId, l);
+                this.equipArmorStand(this.handler.outputSlot.getStack());
                 return true;
             }
             i = this.x + 119;
@@ -171,6 +198,26 @@ public class DefiningTableScreen
         if (!this.canCraft) {
             this.scrollAmount = 0.0f;
             this.scrollOffset = 0;
+        }
+    }
+
+    private void equipArmorStand(ItemStack stack) {
+        if (this.armorStand != null) {
+            EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
+
+            for (EquipmentSlot equipmentSlot : equipmentSlots) {
+                this.armorStand.equipStack(equipmentSlot, ItemStack.EMPTY);
+            }
+
+            if (!stack.isEmpty()) {
+                ItemStack itemStack = stack.copy();
+                if (stack.getItem() instanceof DynamicArmorItem armorItem) {
+                    this.armorStand.equipStack(armorItem.getSlotType(), itemStack);
+                } else {
+                    this.armorStand.equipStack(EquipmentSlot.OFFHAND, itemStack);
+                }
+            }
+
         }
     }
 }
