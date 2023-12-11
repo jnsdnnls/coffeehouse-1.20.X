@@ -2,11 +2,11 @@ package net.jdonthatrack.coffeehouse.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
-import net.jdonthatrack.coffeehouse.entity.ModEntities;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.SpawnEggItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -19,10 +19,9 @@ public class ModItems {
 
     public static final Item UNDEFINIUM = registerItem("undefinium", new Item(new FabricItemSettings()));
     public static final Item UNDEFINIUM_SHARD = registerItem("undefinium_shard", new Item(new FabricItemSettings()));
-    public static final Item RAPTOR_SPAWN_EGG = registerItem("raptor_spawn_egg", new SpawnEggItem(ModEntities.RAPTOR, 0x4BFDFB, 0xfddc4b, new FabricItemSettings()));
-    public static final Item WINDIGO_SPAWN_EGG = registerItem("windigo_spawn_egg", new SpawnEggItem(ModEntities.WINDIGO, 0x6D1F1E, 0xFDEFD4, new FabricItemSettings()));
-    public static final Item EARTH_GOLEM_SPAWN_EGG = registerItem("earth_golem_spawn_egg", new SpawnEggItem(ModEntities.EARTH_GOLEM, 0x6D1F1E, 0xFDEFD4, new FabricItemSettings()));
-    public static final Item DIRE_WOLF_SPAWN_EGG = registerItem("dire_wolf_spawn_egg", new SpawnEggItem(ModEntities.DIRE_WOLF, 0x6D1F1E, 0xFDEFD4, new FabricItemSettings()));
+
+    public static final Item CUSTOM_SPAWN_EGG = registerItem("custom_spawn_egg", new DynamicSpawnEggItem(EntityType.HORSE, new FabricItemSettings()));
+
     public static final Item CUSTOM_HELMET = registerItem("custom_helmet", new DynamicArmorItem(ModArmorMaterials.CUSTOM, ArmorItem.Type.HELMET, new FabricItemSettings()));
     public static final Item CUSTOM_CHESTPLATE = registerItem("custom_chestplate", new DynamicArmorItem(ModArmorMaterials.CUSTOM, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
     public static final Item CUSTOM_LEGGINGS = registerItem("custom_leggings", new DynamicArmorItem(ModArmorMaterials.CUSTOM, ArmorItem.Type.LEGGINGS, new FabricItemSettings()));

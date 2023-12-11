@@ -10,10 +10,6 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Supplier;
 
 public enum ModArmorMaterials implements ArmorMaterial {
-    
-    AMETHYST("amethyst", 25, new int[] {3, 8, 6, 3}, 19, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 2.0F, 0.1F, () -> Ingredient.ofItems(Items.NETHERITE_INGOT)),
-
-    TORCH("torch", 25, new int[] {3, 8, 6, 3}, 19, SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 2.0F, 0.1F, () -> Ingredient.ofItems(Items.NETHERITE_INGOT)),
 
     CUSTOM("custom", 25, new int[] {3, 8, 6, 3}, 19, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F, 0.1F, () -> Ingredient.ofItems(Items.NETHERITE_INGOT));
 

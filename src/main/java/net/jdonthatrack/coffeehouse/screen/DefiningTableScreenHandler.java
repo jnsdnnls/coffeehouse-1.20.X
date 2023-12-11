@@ -3,6 +3,7 @@ package net.jdonthatrack.coffeehouse.screen;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +14,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -25,7 +25,6 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 
 public class DefiningTableScreenHandler extends ScreenHandler {
     public static final int INPUT_ID = 0;
@@ -85,7 +84,13 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         this.inputSlot = this.addSlot(new Slot(this.input, 0, 69, 61) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.getItem() instanceof DynamicArmorItem;
+                if (stack.getItem() instanceof DynamicArmorItem) {
+                    return stack.getItem() instanceof DynamicArmorItem;
+                } else if (stack.getItem() instanceof DynamicSpawnEggItem) {
+                    return stack.getItem() instanceof DynamicSpawnEggItem;
+                } else {
+                    return false;
+                }
             }
         });
         this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 61) {
@@ -249,6 +254,10 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 }
             } else if (item instanceof DynamicArmorItem) {
+                if (!this.insertItem(stackToMove, 1, 2, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (item instanceof DynamicSpawnEggItem) {
                 if (!this.insertItem(stackToMove, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }

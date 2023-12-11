@@ -29,6 +29,8 @@ public class ModItemGroups {
 
                     entries.add(ModBlocks.DEFINING_TABLE);
 
+                    entries.add(ModItems.CUSTOM_SPAWN_EGG);
+
 
                 }).build());
 
