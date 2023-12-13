@@ -149,9 +149,9 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean onButtonClick(PlayerEntity player, int id) {
-        if (this.isInBounds(id)) {
-            this.selectedRecipe.set(id);
+    public boolean onButtonClick(PlayerEntity player, int buttonIndex) {
+        if (this.isInBounds(buttonIndex)) {
+            this.selectedRecipe.set(buttonIndex);
             this.populateResult();
         }
         return true;
@@ -201,8 +201,8 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     void populateResult() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.selectedRecipe.get())) {
             RecipeEntry<DefiningRecipe> recipeEntry = this.availableRecipes.get(this.selectedRecipe.get());
-            ItemStack itemStack = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
-            ItemStack itemStack2 = recipeEntry.value().getOutput(this.inputSlot.getStack());
+            ItemStack itemStack2 = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
+            ItemStack itemStack = recipeEntry.value().getOutput(this.inputSlot.getStack());
 //            CoffeeHouse.LOGGER.info("recipeEntry.value().craft(this.input, this.world.getRegistryManager()) = " + itemStack);
 //            CoffeeHouse.LOGGER.info("recipeEntry.value().getOutput(this.inputSlot.getStack()) = " + itemStack2);
             if (itemStack.isItemEnabled(this.world.getEnabledFeatures())) {
