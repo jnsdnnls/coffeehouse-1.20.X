@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "coffeehouse:undefinium"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "SCS",
+    "NNN"
+  ],
+  "result": {
+    "item": "coffeehouse:defining_table"
+  },
+  "show_notification": true
+}

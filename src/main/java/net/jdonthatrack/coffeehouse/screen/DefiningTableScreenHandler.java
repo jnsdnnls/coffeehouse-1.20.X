@@ -3,6 +3,8 @@ package net.jdonthatrack.coffeehouse.screen;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicModelItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +25,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class DefiningTableScreenHandler extends ScreenHandler {
@@ -83,7 +86,12 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         this.inputSlot = this.addSlot(new Slot(this.input, 0, 84, 7) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.getItem() instanceof DynamicArmorItem;
+                return stack.getItem() instanceof DynamicModelItem;
+            }
+
+            @Override
+            public int getMaxItemCount(ItemStack stack) {
+                return 1;
             }
         });
         this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 7) {
@@ -170,7 +178,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
             this.availableRecipes.clear();
             this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
             if (!inputSlotStack.isEmpty() && !currencySlotStack.isEmpty()) {
-                this.availableRecipes = this.world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, new SimpleInventory(inputSlotStack, this.outputSlot.getStack(), currencySlotStack), this.world);
+                this.availableRecipes = getSortedRecipesById(new SimpleInventory(inputSlotStack, this.outputSlot.getStack(), currencySlotStack), this.world);
             }
         } else {
             if (inputSlotStack.isEmpty() || currencySlotStack.isEmpty()) {
@@ -179,7 +187,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                 this.availableRecipes.clear();
             } else if (currencySlotStack.getCount() != this.currencyStack.getCount()) {
                 RecipeEntry<DefiningRecipe> prevRecipe = this.availableRecipes.get(this.selectedRecipe.get());
-                this.availableRecipes = this.world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, new SimpleInventory(inputSlotStack, this.outputSlot.getStack(), currencySlotStack), this.world);
+                this.availableRecipes = getSortedRecipesById(new SimpleInventory(inputSlotStack, this.outputSlot.getStack(), currencySlotStack), this.world);
                 int indexOfPrevRecipe = this.availableRecipes.indexOf(prevRecipe);
                 if (indexOfPrevRecipe == -1) { // PREVIOUS RECIPE NOT FOUND IN CURRENT availableRecipes
                     this.selectedRecipe.set(-1);
@@ -277,6 +285,20 @@ public class DefiningTableScreenHandler extends ScreenHandler {
             this.sendContentUpdates();
         }
         return itemStack;
+    }
+
+    public List<RecipeEntry<DefiningRecipe>> getAllValidRecipes(Inventory inventory, World world) {
+
+        return world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, inventory, world);
+    }
+
+    public List<RecipeEntry<DefiningRecipe>> getSortedRecipesById(Inventory inventory, World world) {
+        List<RecipeEntry<DefiningRecipe>> validRecipes = getAllValidRecipes(inventory, world);
+
+        // Sort the valid recipes based on the recipe ID
+        validRecipes.sort(Comparator.comparing(recipeEntry -> recipeEntry.id().toString()));
+
+        return validRecipes;
     }
 
     @Override

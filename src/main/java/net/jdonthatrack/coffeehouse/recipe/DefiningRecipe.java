@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -43,7 +44,13 @@ public class DefiningRecipe implements Recipe<Inventory> {
         ItemStack inputStack = inventory.getStack(0);
         ItemStack outputStack = inventory.getStack(1);
         ItemStack currencyStack = inventory.getStack(2);
-        return inputStack.getItem() instanceof DynamicArmorItem && currencyStack.getCount() >= price;
+        if (inputStack.getItem() instanceof DynamicArmorItem) {
+            return inputStack.getItem() instanceof DynamicArmorItem && currencyStack.getCount() >= price;
+        } else if (inputStack.getItem() instanceof DynamicSpawnEggItem) {
+            return inputStack.getItem() instanceof DynamicSpawnEggItem && currencyStack.getCount() >= price;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -86,10 +93,10 @@ public class DefiningRecipe implements Recipe<Inventory> {
         return inputStack;
     }
 
-    //    @Override
-//    public DefaultedList<Ingredient> getIngredients() {
+//     @Override
+//   public DefaultedList<Ingredient> getIngredients() {
 //        DefaultedList<Ingredient> defaultedList = DefaultedList.of();
-//        defaultedList.add(this.);
+//        defaultedList.add(this.ingredient);
 //        return defaultedList;
 //    }
 

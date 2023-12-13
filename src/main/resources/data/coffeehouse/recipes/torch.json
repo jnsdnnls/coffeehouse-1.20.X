@@ -1,5 +1,5 @@
 {
   "type": "coffeehouse:defining",
   "price": 5,
-  "model": "torch_armor"
+  "model": "torch"
 }

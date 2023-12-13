@@ -1,0 +1,72 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unicycle",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "seat",
+					"pivot": [1, 15.75, 0],
+					"cubes": [
+						{"origin": [-1.5, 17, -5.5], "size": [3, 1, 7], "uv": [17, 0]}
+					]
+				},
+				{
+					"name": "frame",
+					"pivot": [1, 11, 0],
+					"cubes": [
+						{"origin": [-3, 4, -3], "size": [1, 8, 2], "uv": [16, 23]},
+						{"origin": [-2, 11, -3], "size": [4, 1, 2], "uv": [22, 23]},
+						{"origin": [2, 4, -3], "size": [1, 8, 2], "uv": [10, 22]},
+						{"origin": [-0.5, 12, -3], "size": [1, 5, 2], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "wheel",
+					"pivot": [0, 4.5, -2],
+					"cubes": [
+						{"origin": [-2, 0, -6.5], "size": [4, 9, 9], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "pedal1",
+					"pivot": [4, 4.5, -2],
+					"cubes": [
+						{"origin": [3, 4, -3], "size": [1, 1, 5], "uv": [21, 13]}
+					]
+				},
+				{
+					"name": "pedalfoot2",
+					"parent": "pedal1",
+					"pivot": [5, 4.5, 2],
+					"cubes": [
+						{"origin": [4, 4, 0.5], "size": [4, 1, 3], "inflate": -0.001, "uv": [18, 19]}
+					]
+				},
+				{
+					"name": "pedal2",
+					"pivot": [-2, 4.5, -2],
+					"rotation": [180, 0, 0],
+					"cubes": [
+						{"origin": [-4, 4, -6], "size": [1, 1, 5], "pivot": [-2.5, 4.5, -2], "rotation": [180, 0, 0], "uv": [0, 18]}
+					]
+				},
+				{
+					"name": "pedalfoot",
+					"parent": "pedal2",
+					"pivot": [-3, 4.5, 2],
+					"cubes": [
+						{"origin": [-8, 1, -3.5], "size": [4, 1, 3], "inflate": -0.001, "pivot": [-5, 3, 0], "rotation": [180, 0, 0], "uv": [7, 18]}
+					]
+				}
+			]
+		}
+	]
+}

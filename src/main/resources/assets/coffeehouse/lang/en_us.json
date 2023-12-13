@@ -2,7 +2,7 @@
   "itemgroup.coffeehouse.creativetab": "Coffee House",
 
   "item.coffeehouse.model": "§8Model: ",
-  "item.coffeehouse.custom_armor": "%d %d",
+  "item.coffeehouse.custom_item": "%d %d",
   "item.coffeehouse.windigo_spawn_egg": "Windigo Spawn Egg",
   "item.coffeehouse.raptor_spawn_egg": "Raptor Spawn Egg",
 
@@ -18,5 +18,8 @@
   "entity.coffeehouse.raptor": "Raptor",
 
   "container.coffeehouse.defining_table": "Defining Table",
-  "block.coffeehouse.defining_table": "Defining Table"
+  "block.coffeehouse.defining_table": "Defining Table",
+
+  "item.coffeehouse.jester_lullaby_music_disc": "Jester's Lullaby Music Disc",
+  "item.coffeehouse.jester_lullaby_music_disc.desc": "Music Box - Jester's Lullaby"
 }

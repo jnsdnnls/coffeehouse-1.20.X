@@ -1,10 +1,8 @@
-// 1.20.2	2023-12-07T19:18:58.6903823	CoffeeHouse/Model Definitions
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\coffeehouse\models\item\earth_golem_spawn_egg.json
+// 1.20.2	2023-12-12T16:55:29.5465245	CoffeeHouse/Model Definitions
 15b414b3e7ec0988ae766073b6115f60fcc222b0 assets\coffeehouse\models\item\undefinium_ore.json
 05960b2ed45073192a33e411e5bd7a291f15a3cb assets\coffeehouse\models\block\deepslate_undefinium_ore.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\coffeehouse\models\item\raptor_spawn_egg.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\coffeehouse\models\item\windigo_spawn_egg.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets\coffeehouse\models\item\dire_wolf_spawn_egg.json
+d4d756f9fdf434d8fa705c95a9ce1840d22efdc7 assets\coffeehouse\models\item\jester_lullaby_music_disc.json
+73e95d09d586fb2d6cc938a7a5b5701a09dd35de assets\coffeehouse\models\item\custom_spawn_egg.json
 0170ec5688a34ba48d8bd32cd601e40000de41a5 assets\coffeehouse\blockstates\undefinium_ore.json
 35dfdcdd67e373405a1b83a55657f1b6b7f9dfe9 assets\coffeehouse\models\item\deepslate_undefinium_ore.json
 2937b1c3323b9dc14b81603bc0029e5498334288 assets\coffeehouse\models\block\undefinium_ore.json

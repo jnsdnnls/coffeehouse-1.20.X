@@ -4,9 +4,13 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
+import net.minecraft.entity.decoration.painting.PaintingEntity;
+import net.minecraft.entity.decoration.painting.PaintingVariant;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -15,10 +19,19 @@ public class ModItemGroups {
         FabricItemGroup.builder()
             .displayName(Text.translatable("itemgroup.coffeehouse.creativetab"))
             .icon(() -> new ItemStack(ModItems.UNDEFINIUM)).entries((displayContext, entries) -> {
-                    entries.add(ModItems.CUSTOM_HELMET);
-                    entries.add(ModItems.CUSTOM_CHESTPLATE);
-                    entries.add(ModItems.CUSTOM_LEGGINGS);
-                    entries.add(ModItems.CUSTOM_BOOTS);
+
+                    ItemStack[] armorPieces = {
+                            new ItemStack(ModItems.CUSTOM_HELMET),
+                            new ItemStack(ModItems.CUSTOM_CHESTPLATE),
+                            new ItemStack(ModItems.CUSTOM_LEGGINGS),
+                            new ItemStack(ModItems.CUSTOM_BOOTS)
+                    };
+
+                    for (ItemStack stack : armorPieces) {
+                        NbtCompound nbt = stack.getOrCreateNbt();
+                        nbt.putString("model", "undefined"); // Replace with your actual model value
+                        entries.add(stack);
+                    }
 
                     entries.add(ModItems.UNDEFINIUM);
                     entries.add(ModItems.UNDEFINIUM_SHARD);
@@ -29,6 +42,9 @@ public class ModItemGroups {
 
                     entries.add(ModBlocks.DEFINING_TABLE);
 
+                    entries.add(ModItems.CUSTOM_SPAWN_EGG);
+
+                    entries.add(ModItems.JESTER_LULLABY_MUSIC_DISC);
 
                 }).build());
 

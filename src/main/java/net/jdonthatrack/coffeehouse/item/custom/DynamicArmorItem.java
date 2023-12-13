@@ -54,8 +54,8 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
             }
             String modelValue = nbt.getString("model");
             return switch (modelValue) {
-                case "torch_armor" -> 0.1f;
-                case "amethyst_armor" -> 0.2f;
+                case "torch" -> 0.1f;
+                case "amethyst" -> 0.2f;
                 // Add cases for other armor types if needed
                 default -> 0.0f;
             };
@@ -90,7 +90,7 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
                     renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                     return renderer;
                 } else {
-                    currentModel = "question_armor";
+                    currentModel = "undefined_armor";
                     Identifier modelIdentifier = new Identifier(CoffeeHouse.MOD_ID, currentModel);
                     DynamicArmorRenderer renderer = renderers.computeIfAbsent(currentModel, model -> new DynamicArmorRenderer(modelIdentifier));
 
@@ -128,6 +128,10 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
             if (context.isAdvanced()) {
                 tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
             }
+        } else {
+            if (context.isAdvanced()) {
+                tooltip.add(Text.literal("Model: " + "undefined_armor").formatted(Formatting.GRAY));
+            }
         }
     }
 
@@ -150,6 +154,6 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
             case BOOTS -> "Boots";
         };
 
-        return Text.translatable("item.coffeehouse.custom_armor", capitalize(currentModel), armorType);
+        return Text.translatable("item.coffeehouse.custom_item", capitalize(currentModel), armorType);
     }
 }
