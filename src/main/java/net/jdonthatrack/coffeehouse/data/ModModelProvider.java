@@ -26,5 +26,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.UNDEFINIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.UNDEFINIUM_SHARD, Models.GENERATED);
         itemModelGenerator.register(ModItems.CUSTOM_SPAWN_EGG, Models.GENERATED);
+
+        itemModelGenerator.register(ModItems.JESTER_LULLABY_MUSIC_DISC, Models.GENERATED);
     }
 }

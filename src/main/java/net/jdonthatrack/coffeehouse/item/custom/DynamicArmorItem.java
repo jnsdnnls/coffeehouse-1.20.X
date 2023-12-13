@@ -90,7 +90,7 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
                     renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                     return renderer;
                 } else {
-                    currentModel = "question_armor";
+                    currentModel = "undefined_armor";
                     Identifier modelIdentifier = new Identifier(CoffeeHouse.MOD_ID, currentModel);
                     DynamicArmorRenderer renderer = renderers.computeIfAbsent(currentModel, model -> new DynamicArmorRenderer(modelIdentifier));
 
@@ -127,6 +127,10 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
             String currentModel = stack.getNbt().getString("model");
             if (context.isAdvanced()) {
                 tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
+            }
+        } else {
+            if (context.isAdvanced()) {
+                tooltip.add(Text.literal("Model: " + "undefined_armor").formatted(Formatting.GRAY));
             }
         }
     }

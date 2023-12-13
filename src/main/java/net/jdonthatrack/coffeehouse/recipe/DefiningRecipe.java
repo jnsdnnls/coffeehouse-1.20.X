@@ -93,10 +93,10 @@ public class DefiningRecipe implements Recipe<Inventory> {
         return inputStack;
     }
 
-    //    @Override
-//    public DefaultedList<Ingredient> getIngredients() {
+//     @Override
+//   public DefaultedList<Ingredient> getIngredients() {
 //        DefaultedList<Ingredient> defaultedList = DefaultedList.of();
-//        defaultedList.add(this.);
+//        defaultedList.add(this.ingredient);
 //        return defaultedList;
 //    }
 

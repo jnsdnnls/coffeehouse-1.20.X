@@ -13,8 +13,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
@@ -85,15 +83,20 @@ public class DefiningTableScreenHandler extends ScreenHandler {
             }
         });
         this.inputSlot = this.addSlot(new Slot(this.input, 0, 69, 61) {
+
             @Override
             public boolean canInsert(ItemStack stack) {
                 if (stack.getItem() instanceof DynamicArmorItem) {
                     return stack.getItem() instanceof DynamicArmorItem;
                 } else if (stack.getItem() instanceof DynamicSpawnEggItem) {
                     return stack.getItem() instanceof DynamicSpawnEggItem;
-                } else {
-                    return false;
                 }
+                return false;
+            }
+
+            @Override
+            public int getMaxItemCount(ItemStack stack) {
+                return 1;
             }
         });
         this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 61) {
@@ -260,10 +263,6 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(stackToMove, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (item instanceof DynamicSpawnEggItem) {
-                if (!this.insertItem(stackToMove, 1, 2, false)) {
-                    return ItemStack.EMPTY;
-                }
             } else if (stackToMove.isOf(ModItems.UNDEFINIUM)) {
                 if (!this.insertItem(stackToMove, 0, 1, false)) {
                     return ItemStack.EMPTY;
@@ -291,9 +290,8 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     public List<RecipeEntry<DefiningRecipe>> getAllValidRecipes(Inventory inventory, World world) {
-        List<RecipeEntry<DefiningRecipe>> validRecipes = world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, inventory, world);
 
-        return validRecipes;
+        return world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, inventory, world);
     }
 
     public List<RecipeEntry<DefiningRecipe>> getSortedRecipesById(Inventory inventory, World world) {

@@ -1,0 +1,10 @@
+{
+  "jester_lullaby": {
+    "sounds": [
+      {
+        "name": "coffeehouse:jester_lullaby",
+        "stream": true
+      }
+    ]
+  }
+}
