@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:golden_apple"
+    },
+    "E": {
+      "item": "minecraft:egg"
+    },
+    "H": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "S": {
+      "item": "coffeehouse:undefinium_shard"
+    },
+    "U": {
+      "item": "coffeehouse:undefinium"
+    }
+  },
+  "pattern": [
+    "SAS",
+    "UEU",
+    "SHS"
+  ],
+  "result": {
+    "item": "coffeehouse:custom_spawn_egg"
+  },
+  "show_notification": true
+}

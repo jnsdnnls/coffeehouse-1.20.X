@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "coffeehouse:item/jester_lullaby_music_disc"
+  }
+}

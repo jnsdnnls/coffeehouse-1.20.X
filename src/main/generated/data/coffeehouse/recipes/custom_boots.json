@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "item": "minecraft:dragon_breath"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "G": {
+      "item": "minecraft:netherite_boots"
+    },
+    "U": {
+      "item": "coffeehouse:undefinium"
+    },
+    "X": {
+      "item": "coffeehouse:undefinium_block"
+    }
+  },
+  "pattern": [
+    "UBU",
+    "EGE",
+    "UXU"
+  ],
+  "result": {
+    "item": "coffeehouse:custom_boots"
+  },
+  "show_notification": true
+}
