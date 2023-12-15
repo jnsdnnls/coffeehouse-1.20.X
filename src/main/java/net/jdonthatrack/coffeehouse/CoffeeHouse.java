@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.block.entity.ModBlockEntityTypes;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.entity.custom.FerretEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.UnicycleEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
@@ -29,6 +30,7 @@ public class CoffeeHouse implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(ModEntities.EARTH_GOLEM, WindigoEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.DIRE_WOLF, WindigoEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.UNICYCLE, UnicycleEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.FERRET, FerretEntity.createFerretAttributes());
 
 		ModWorldGeneration.generateModWorldGen();
 		ModBlockEntityTypes.registerModBlockEntityTypes();
