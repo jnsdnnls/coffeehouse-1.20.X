@@ -1,24 +1,33 @@
 package net.jdonthatrack.coffeehouse.entity.custom;
 
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
@@ -29,12 +38,15 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
 public class FerretEntity extends TameableEntity implements GeoEntity {
 
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private static final TrackedData<Boolean> SITTING =
+            DataTracker.registerData(FerretEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public FerretEntity(EntityType<? extends FerretEntity> entityType, World world) {
         super(entityType, world);
@@ -49,6 +61,12 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(10, new LookAroundGoal(this));
+
+        this.initCustomGoals();
+    }
+
+    protected void initCustomGoals() {
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{ModItems.UNDEFINED_CANDY}), false));
     }
 
     public static DefaultAttributeContainer.Builder createFerretAttributes() {
@@ -90,13 +108,12 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
 
     @Override
     public EntityView method_48926() {
-        return null;
+        return this.getWorld();
     }
 
     @Nullable
-    @Override
     public FerretEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
-        FerretEntity ferretEntity = ModEntities.FERRET.create(serverWorld);
+        FerretEntity ferretEntity = (FerretEntity)ModEntities.FERRET.create(serverWorld);
         if (ferretEntity != null) {
             UUID uUID = this.getOwnerUuid();
             if (uUID != null) {
@@ -141,7 +158,7 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
     private static final Ingredient TAMING_INGREDIENT;
 
     static {
-        TAMING_INGREDIENT = Ingredient.ofItems(Items.RABBIT, Items.CHICKEN);
+        TAMING_INGREDIENT = Ingredient.ofItems(ModItems.UNDEFINED_CANDY);
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -154,11 +171,82 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
             return PlayState.CONTINUE;
         }
 
+        if (this.isSitting()) {
+            event.getController().setAnimation(RawAnimation.begin().then("animation.ferret.sit", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+
         event.getController().setAnimation(RawAnimation.begin().then("animation.ferret.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getStackInHand(hand);
+        Item item = itemstack.getItem();
+
+        Item itemForTaming = ModItems.UNDEFINED_CANDY;
+
+        if (item == itemForTaming && !isTamed()) {
+            if (this.getWorld().isClient()) {
+                return ActionResult.CONSUME;
+            } else {
+                if (!player.getAbilities().creativeMode) {
+                    itemstack.decrement(1);
+                }
+
+                if (!this.getWorld().isClient()) {
+                    super.setOwner(player);
+                    this.navigation.recalculatePath();
+                    this.setTarget(null);
+                    this.getWorld().sendEntityStatus(this, (byte)7);
+                    setSit(true);
+                }
+
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        if(isTamed() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
+            setSit(!isSitting());
+            return ActionResult.SUCCESS;
+        }
+
+        if (itemstack.getItem() == itemForTaming) {
+            return ActionResult.PASS;
+        }
+
+        return super.interactMob(player, hand);
+    }
+
+    public void setSit(boolean sitting) {
+        this.dataTracker.set(SITTING, sitting);
+        super.setSitting(sitting);
+    }
+
+    public boolean isSitting() {
+        return this.dataTracker.get(SITTING);
+    }
+
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putBoolean("isSitting", this.dataTracker.get(SITTING));
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.dataTracker.set(SITTING, nbt.getBoolean("isSitting"));
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SITTING, false);
     }
 }

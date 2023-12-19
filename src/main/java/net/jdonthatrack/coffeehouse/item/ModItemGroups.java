@@ -33,6 +33,9 @@ public class ModItemGroups {
                         entries.add(stack);
                     }
 
+                    entries.add(ModItems.UNDEFINED_CANDY);
+                    entries.add(ModItems.UNDEFINED_CANDY_SEEDS);
+
                     entries.add(ModItems.UNDEFINIUM);
                     entries.add(ModItems.UNDEFINIUM_SHARD);
 

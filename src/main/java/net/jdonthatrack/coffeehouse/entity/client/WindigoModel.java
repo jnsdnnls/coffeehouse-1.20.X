@@ -1,7 +1,6 @@
 package net.jdonthatrack.coffeehouse.entity.client;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
-import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;

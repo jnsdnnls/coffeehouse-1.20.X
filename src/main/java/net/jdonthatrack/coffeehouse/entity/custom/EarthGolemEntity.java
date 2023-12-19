@@ -1,6 +1,8 @@
 package net.jdonthatrack.coffeehouse.entity.custom;
 
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.item.ModItems;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,13 +15,17 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
@@ -30,12 +36,13 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Objects;
 
 public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(EarthGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
 
     public EarthGolemEntity(EntityType<? extends EarthGolemEntity> entityType, World world) {
@@ -65,7 +72,7 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
     protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{ModItems.UNDEFINED_CANDY}), false));
     }
 
     protected void initAttributes(Random random) {
@@ -146,6 +153,47 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
         if (passenger instanceof LivingEntity) {
             ((LivingEntity)passenger).bodyYaw = this.bodyYaw;
         }
+    }
+
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        boolean bl = !this.isBaby() && this.isTame() && player.shouldCancelInteraction();
+        if (!this.hasPassengers() && !bl) {
+            ItemStack itemStack = player.getStackInHand(hand);
+            if (!itemStack.isEmpty()) {
+                if (this.isBreedingItem(itemStack)) {
+                    return this.interactHorse(player, itemStack);
+                }
+
+                if (!this.isTame()) {
+                    this.playAngrySound();
+                    return ActionResult.success(this.getWorld().isClient);
+                }
+            }
+
+            return super.interactMob(player, hand);
+        } else {
+            return super.interactMob(player, hand);
+        }
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return TAMING_INGREDIENT.test(stack);
+    }
+
+    @Override
+    public boolean canBreedWith(AnimalEntity other) {
+        if (other == this) {
+            return false;
+        } else {
+            return this.canBreed();
+        }
+    }
+
+    private static final Ingredient TAMING_INGREDIENT;
+    static {
+        TAMING_INGREDIENT = Ingredient.ofItems(new ItemConvertible[]{ModItems.UNDEFINED_CANDY});
     }
 
     @Override

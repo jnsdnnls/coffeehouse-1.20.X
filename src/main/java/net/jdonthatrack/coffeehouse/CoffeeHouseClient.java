@@ -30,5 +30,7 @@ public class CoffeeHouseClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DEFINING_TABLE, RenderLayer.getCutout());
         HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
+
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.UNDEFINED_CANDY_CROP, RenderLayer.getCutout());
     }
 }

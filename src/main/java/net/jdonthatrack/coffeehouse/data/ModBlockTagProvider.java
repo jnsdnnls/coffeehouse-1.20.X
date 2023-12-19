@@ -23,6 +23,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.UNDEFINIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_UNDEFINIUM_ORE);
 
+        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+                .add(ModBlocks.DEFINING_TABLE);
+
         getOrCreateTagBuilder(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.UNDEFINIUM_BLOCK);
 

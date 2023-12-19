@@ -172,7 +172,7 @@ public class DynamicSpawnEggItem extends Item {
         if (!stack.hasNbt() || !nbt.contains("model", NbtElement.STRING_TYPE)) {
             currentModel = "Undefined";
         } else {
-            currentModel = nbt.getString("model").replace("_armor", "");
+            currentModel = nbt.getString("model").replace("_", " ");
         }
 
         return Text.translatable("item.coffeehouse.custom_armor", capitalize(currentModel), "Spawn Egg");
