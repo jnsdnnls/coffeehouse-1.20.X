@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ModItems {
 
-    public static final List<String> VALID_MODELS = List.of("amethyst", "torch");
+    public static final List<String> VALID_MODELS = List.of("amethyst", "torch", "undefined");
 
     public static final Item UNDEFINIUM = registerItem("undefinium", new Item(new FabricItemSettings()));
     public static final Item UNDEFINIUM_SHARD = registerItem("undefinium_shard", new Item(new FabricItemSettings()));

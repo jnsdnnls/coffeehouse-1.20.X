@@ -39,6 +39,6 @@ public class EarthGolemModel extends GeoModel<EarthGolemEntity> {
     }
 
     public boolean isSaddled(EarthGolemEntity earthGolem) {
-        return (earthGolem.getHorseFlag(4));
+        return earthGolem.getHorseFlag(4);
     }
 }

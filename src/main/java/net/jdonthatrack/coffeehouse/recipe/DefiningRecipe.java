@@ -4,12 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicModelItem;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -44,13 +42,7 @@ public class DefiningRecipe implements Recipe<Inventory> {
         ItemStack inputStack = inventory.getStack(0);
         ItemStack outputStack = inventory.getStack(1);
         ItemStack currencyStack = inventory.getStack(2);
-        if (inputStack.getItem() instanceof DynamicArmorItem) {
-            return inputStack.getItem() instanceof DynamicArmorItem && currencyStack.getCount() >= price;
-        } else if (inputStack.getItem() instanceof DynamicSpawnEggItem) {
-            return inputStack.getItem() instanceof DynamicSpawnEggItem && currencyStack.getCount() >= price;
-        } else {
-            return false;
-        }
+        return currencyStack.getCount() >= price && inputStack.getItem() instanceof DynamicModelItem;
     }
 
     @Override
@@ -75,10 +67,9 @@ public class DefiningRecipe implements Recipe<Inventory> {
 
     @Override
     public ItemStack getResult(DynamicRegistryManager registryManager) {
-        int index = (int) ((((double) System.nanoTime() / 1e9) % (FRAME_TIME * 4)) / FRAME_TIME); // index 0,1,2,3 changes every FRAME_TIME seconds
+        int index = (int) ((((double) System.nanoTime() / 1e9) % (FRAME_TIME * CUSTOM_ARMOR.length)) / FRAME_TIME); // index 0,1,2,3 changes every FRAME_TIME seconds
         ItemStack input = new ItemStack(CUSTOM_ARMOR[index]);
-        NbtCompound nbt = input.getOrCreateNbt();
-        nbt.putString("model", model);
+        DynamicModelItem.setModel(input, model);
         return input;
     }
 
@@ -88,8 +79,7 @@ public class DefiningRecipe implements Recipe<Inventory> {
 
     public ItemStack getOutput(ItemStack inputStack) {
         inputStack = inputStack.copy();
-        NbtCompound nbt = inputStack.getOrCreateNbt();
-        nbt.putString("model", model);
+        DynamicModelItem.setModel(inputStack, model);
         return inputStack;
     }
 

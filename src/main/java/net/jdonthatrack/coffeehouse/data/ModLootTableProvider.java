@@ -9,7 +9,6 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
 import net.minecraft.loot.function.ApplyBonusLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
@@ -28,7 +27,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item, Float minItem, Float maxItem) {
-        return dropsWithSilkTouch(drop,(LootPoolEntry.Builder)this.applyExplosionDecay(drop,
+        return dropsWithSilkTouch(drop, this.applyExplosionDecay(drop,
                 ItemEntry.builder(item)
                         .apply(SetCountLootFunction
                                 .builder(UniformLootNumberProvider

@@ -15,7 +15,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
@@ -30,8 +29,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
-
-import java.util.Objects;
 
 public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
@@ -48,6 +45,7 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 53.0)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.22499999403953552);
     }
+    @Override
     protected void initGoals() {
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.2));
         this.goalSelector.add(1, new HorseBondWithPlayerGoal(this, 1.2));
@@ -63,11 +61,13 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
         this.initCustomGoals();
     }
 
+    @Override
     protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
     }
 
+    @Override
     protected void initAttributes(Random random) {
         EntityAttributeInstance attributeInstance;
         attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -78,15 +78,18 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
         attributeInstance.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
     }
 
+    @Override
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(HORSE_FLAGS, (byte)0);
     }
 
+    @Override
     public boolean getHorseFlag(int bitmask) {
-        return ((Byte)this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
+        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
     }
 
+    @Override
     protected void setHorseFlag(int bitmask, boolean flag) {
         byte b = this.dataTracker.get(HORSE_FLAGS);
         if (flag) {
@@ -99,7 +102,7 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
 
     @Override
     public EntityView method_48926() {
-        return null;
+        return this.getWorld();
     }
 
     @Nullable
@@ -123,10 +126,12 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
         return super.cannotBeSilenced();
     }
 
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    @Override
+    public EarthGolemEntity createChild(ServerWorld world, PassiveEntity entity) {
         return ModEntities.EARTH_GOLEM.create(world);
     }
 
+    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
@@ -141,6 +146,7 @@ public class EarthGolemEntity extends AbstractHorseEntity implements GeoEntity {
         return PlayState.CONTINUE;
     }
 
+    @Override
     protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
         super.updatePassengerPosition(passenger, positionUpdater);
         if (passenger instanceof LivingEntity) {

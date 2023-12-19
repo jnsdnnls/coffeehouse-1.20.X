@@ -9,7 +9,9 @@ import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WindigoRenderer extends GeoEntityRenderer<WindigoEntity> {
-    public WindigoRenderer(EntityRendererFactory.Context renderManager) {super(renderManager, new WindigoModel());}
+    public WindigoRenderer(EntityRendererFactory.Context renderManager) {
+        super(renderManager, new WindigoModel());
+    }
 
     @Override
     public Identifier getTextureLocation(WindigoEntity animatable) {
@@ -18,7 +20,7 @@ public class WindigoRenderer extends GeoEntityRenderer<WindigoEntity> {
 
     @Override
     public void render(WindigoEntity entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-        if(entity.isBaby()) {
+        if (entity.isBaby()) {
             poseStack.scale(0.4f, 0.4f, 0.4f);
         }
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
