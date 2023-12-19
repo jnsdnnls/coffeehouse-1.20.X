@@ -18,7 +18,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
@@ -42,14 +41,14 @@ public class DynamicSpawnEggItem extends Item implements DynamicModelItem {
     private static final Map<EntityType<? extends MobEntity>, DynamicSpawnEggItem> SPAWN_EGGS = Maps.newHashMap(); // Use a String key instead of EntityType
     private final EntityType<?> type;
 
-    public DynamicSpawnEggItem(EntityType<? extends MobEntity> type, Item.Settings settings) {
+    public DynamicSpawnEggItem(EntityType<? extends MobEntity> type, Settings settings) {
         super(settings);
         this.type = type;
         SPAWN_EGGS.put(type, this); // Use EntityType name as a key
     }
 
     @Nullable
-    public static DynamicSpawnEggItem forEntity(@Nullable EntityType<?> type) {
+    public static DynamicSpawnEggItem forEntity(@Nullable EntityType<? extends MobEntity> type) {
         return SPAWN_EGGS.get(type);
     }
 
@@ -64,6 +63,7 @@ public class DynamicSpawnEggItem extends Item implements DynamicModelItem {
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
+    @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         World world = context.getWorld();
         if (!(world instanceof ServerWorld)) {
@@ -102,6 +102,7 @@ public class DynamicSpawnEggItem extends Item implements DynamicModelItem {
         return ActionResult.CONSUME;
     }
 
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         BlockHitResult blockHitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
@@ -138,11 +139,10 @@ public class DynamicSpawnEggItem extends Item implements DynamicModelItem {
     }
 
     public EntityType<?> getEntityType(@Nullable NbtCompound nbt) {
-        if (nbt != null && nbt.contains("model", NbtElement.STRING_TYPE)) {
-            String modelName = nbt.getString("model");
+        if (DynamicModelItem.hasModel(nbt)) {
+            String modelName = DynamicModelItem.getModel(nbt);
             // Example: modelName is "unicycle", "other_custom_mob", etc.
-            Identifier customTypeIdentifier = new Identifier(CoffeeHouse.MOD_ID, modelName);
-            EntityType<?> customType = EntityType.get(String.valueOf(new Identifier(CoffeeHouse.MOD_ID, modelName))).orElse(null);
+            EntityType<?> customType = EntityType.get(new Identifier(CoffeeHouse.MOD_ID, modelName).toString()).orElse(null);
 
             if (customType != null) {
                 return customType;
@@ -154,24 +154,26 @@ public class DynamicSpawnEggItem extends Item implements DynamicModelItem {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasNbt()) {
-            String currentModel = stack.getNbt().getString("model");
-            if (context.isAdvanced()) {
-                tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
-            }
+        String currentModel;
+        if (DynamicModelItem.hasModel(stack)) {
+            currentModel = DynamicModelItem.getModel(stack);
+        } else {
+            currentModel = "Undefined";
+        }
+
+        if (context.isAdvanced()) {
+            tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
         }
     }
 
     @Override
     public Text getName(ItemStack stack) {
-        NbtCompound nbt = stack.getNbt();
-
         String currentModel;
 
-        if (!stack.hasNbt() || !nbt.contains("model", NbtElement.STRING_TYPE)) {
+        if (!DynamicModelItem.hasModel(stack)) {
             currentModel = "Undefined";
         } else {
-            currentModel = nbt.getString("model");
+            currentModel = DynamicModelItem.getModel(stack);
         }
 
         return Text.translatable("item.coffeehouse.custom_item", capitalize(currentModel), "Spawn Egg");

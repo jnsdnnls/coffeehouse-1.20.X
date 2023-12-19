@@ -6,22 +6,25 @@ import net.minecraft.nbt.NbtElement;
 import org.jetbrains.annotations.Nullable;
 
 public interface DynamicModelItem {
+    public static final String MODEL_KEY = "model";
 
-    static NbtCompound setModel(NbtCompound nbt, String model) {
-        nbt.putString("model", model);
-        return nbt;
+    public static boolean hasModel(ItemStack stack) {
+        return hasModel(stack.getNbt());
     }
 
-    static void setModel(ItemStack stack, String model) {
-        setModel(stack.getOrCreateNbt(), model);
+    public static boolean hasModel(@Nullable NbtCompound nbt) {
+        return nbt != null && nbt.contains(MODEL_KEY, NbtElement.STRING_TYPE);
     }
 
-    @Nullable
-    static String getModel(NbtCompound nbt) {
-        return nbt.contains("model", NbtElement.STRING_TYPE) ? nbt.getString("model") : null;
+    public static String getModel(NbtCompound nbt) {
+        return nbt.getString(MODEL_KEY);
     }
 
-    static boolean hasModel(NbtCompound nbt) {
-        return nbt.contains("model", NbtElement.STRING_TYPE);
+    public static String getModel(ItemStack stack) {
+        return getModel(stack.getNbt());
+    }
+
+    public static void setModel(ItemStack stack, String model) {
+        stack.getOrCreateNbt().putString(MODEL_KEY, model);
     }
 }
