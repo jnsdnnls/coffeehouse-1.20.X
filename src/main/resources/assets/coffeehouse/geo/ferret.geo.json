@@ -1,0 +1,94 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.ferret",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "ferret",
+					"pivot": [0, 0, 0],
+					"rotation": [0, -90, 0]
+				},
+				{
+					"name": "full_body",
+					"parent": "ferret",
+					"pivot": [17.20117, 5.06921, 1.5]
+				},
+				{
+					"name": "neck",
+					"parent": "full_body",
+					"pivot": [-5, 7, 1.5],
+					"cubes": [
+						{"origin": [-13, 5, -1.5], "size": [9, 4, 4], "pivot": [-5, 7, 0.5], "rotation": [0, 0, 77.5], "uv": [0, 10]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "neck",
+					"pivot": [-6.75, 12.75, 1.5],
+					"cubes": [
+						{"origin": [-10, 12, -2], "size": [5, 4, 5], "uv": [21, 19]},
+						{"origin": [-11, 12, -1], "size": [1, 2, 3], "uv": [24, 28]},
+						{"origin": [-7, 15, -3], "size": [1, 2, 2], "uv": [26, 15]},
+						{"origin": [-7, 15, 2], "size": [1, 2, 2], "uv": [0, 31]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "full_body",
+					"pivot": [5.20117, 5.06921, 1.5],
+					"cubes": [
+						{"origin": [-6.79883, 3.56921, -2], "size": [14, 5, 5], "pivot": [0.20117, 6.06921, 0.5], "rotation": [0, 0, 7.5], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "leg",
+					"parent": "full_body",
+					"pivot": [-6, 4.5, -0.25],
+					"cubes": [
+						{"origin": [-7, 0, -2.25], "size": [2, 5, 2], "uv": [8, 24]}
+					]
+				},
+				{
+					"name": "leg2",
+					"parent": "full_body",
+					"pivot": [-6, 4.5, 3.25],
+					"cubes": [
+						{"origin": [-7, 0, 1.25], "size": [2, 5, 2], "uv": [0, 24]}
+					]
+				},
+				{
+					"name": "leg4",
+					"parent": "ferret",
+					"pivot": [5.62773, 2.57027, 3.25],
+					"cubes": [
+						{"origin": [4.62773, 0.07027, 1.25], "size": [2, 3, 2], "uv": [26, 10]}
+					]
+				},
+				{
+					"name": "leg3",
+					"parent": "ferret",
+					"pivot": [5.62773, 2.57027, -0.25],
+					"cubes": [
+						{"origin": [4.62773, 0.07027, -2.25], "size": [2, 3, 2], "uv": [16, 28]}
+					]
+				},
+				{
+					"name": "tail",
+					"parent": "ferret",
+					"pivot": [6.75, 5, 1.5],
+					"cubes": [
+						{"origin": [6.75, 3.5, -1], "size": [10, 3, 3], "uv": [0, 18]}
+					]
+				}
+			]
+		}
+	]
+}

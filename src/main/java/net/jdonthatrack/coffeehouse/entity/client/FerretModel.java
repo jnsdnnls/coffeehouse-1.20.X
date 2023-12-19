@@ -1,10 +1,8 @@
 package net.jdonthatrack.coffeehouse.entity.client;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
-import net.jdonthatrack.coffeehouse.entity.custom.UnicycleEntity;
+import net.jdonthatrack.coffeehouse.entity.custom.FerretEntity;
 import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.constant.DataTickets;
@@ -13,26 +11,26 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class UnicycleModel extends GeoModel<UnicycleEntity> {
+public class FerretModel extends GeoModel<FerretEntity> {
 
     @Override
-    public Identifier getModelResource(UnicycleEntity animatable) {
-        return new Identifier(CoffeeHouse.MOD_ID, "geo/unicycle.geo.json");
+    public Identifier getModelResource(FerretEntity animatable) {
+        return new Identifier(CoffeeHouse.MOD_ID, "geo/ferret.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(UnicycleEntity animatable) {
-        return new Identifier(CoffeeHouse.MOD_ID, "textures/entity/unicycle.png");
+    public Identifier getTextureResource(FerretEntity animatable) {
+        return new Identifier(CoffeeHouse.MOD_ID, "textures/entity/ferret.png");
     }
 
     @Override
-    public Identifier getAnimationResource(UnicycleEntity animatable) {
-        return new Identifier(CoffeeHouse.MOD_ID, "animations/unicycle.animation.json");
+    public Identifier getAnimationResource(FerretEntity animatable) {
+        return new Identifier(CoffeeHouse.MOD_ID, "animations/ferret.animation.json");
     }
 
     @Override
-    public void setCustomAnimations(UnicycleEntity animatable, long instanceId, AnimationState<UnicycleEntity> animationState) {
-        CoreGeoBone head = getAnimationProcessor().getBone("full_head");
+    public void setCustomAnimations(FerretEntity animatable, long instanceId, AnimationState<FerretEntity> animationState) {
+        CoreGeoBone head = getAnimationProcessor().getBone("head");
 
         if (head != null) {
             EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);

@@ -30,4 +30,8 @@ public class ModEntities {
     public static final EntityType<UnicycleEntity> UNICYCLE = Registry.register(
             Registries.ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "unicycle"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, UnicycleEntity::new).dimensions(EntityDimensions.fixed(1f, 1.2f)).build());
+
+    public static final EntityType<FerretEntity> FERRET = Registry.register(
+            Registries.ENTITY_TYPE, new Identifier(CoffeeHouse.MOD_ID, "ferret"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FerretEntity::new).dimensions(EntityDimensions.fixed(1f, 1.2f)).build());
 }
