@@ -5,10 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.block.entity.ModBlockEntityTypes;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
-import net.jdonthatrack.coffeehouse.entity.custom.FerretEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.UnicycleEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
+import net.jdonthatrack.coffeehouse.entity.custom.*;
 import net.jdonthatrack.coffeehouse.item.ModItemGroups;
 import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeSerializers;
@@ -27,8 +24,8 @@ public class CoffeeHouse implements ModInitializer {
 	public void onInitialize() {
 		FabricDefaultAttributeRegistry.register(ModEntities.RAPTOR, RaptorEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.WINDIGO, WindigoEntity.setAttributes());
-		FabricDefaultAttributeRegistry.register(ModEntities.EARTH_GOLEM, WindigoEntity.setAttributes());
-		FabricDefaultAttributeRegistry.register(ModEntities.DIRE_WOLF, WindigoEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.EARTH_GOLEM, EarthGolemEntity.setAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.DIRE_WOLF, DireWolfEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.UNICYCLE, UnicycleEntity.setAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.FERRET, FerretEntity.createFerretAttributes());
 

@@ -6,11 +6,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import software.bernie.example.client.model.entity.RaceCarModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DireWolfRenderer extends GeoEntityRenderer<DireWolfEntity> {
-    public DireWolfRenderer(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new DireWolfModel());
+    public DireWolfRenderer(EntityRendererFactory.Context context) {
+        super(context, new DireWolfModel());
     }
 
     @Override

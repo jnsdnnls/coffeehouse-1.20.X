@@ -1,203 +1,124 @@
 package net.jdonthatrack.coffeehouse.entity.custom;
 
-import net.jdonthatrack.coffeehouse.entity.ModEntities;
-import net.jdonthatrack.coffeehouse.item.ModItems;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.*;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.EntityView;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.Objects;
+public class DireWolfEntity extends AnimalEntity implements GeoEntity {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-public class DireWolfEntity extends AbstractHorseEntity implements GeoEntity {
-
-    private AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(DireWolfEntity.class, TrackedDataHandlerRegistry.BYTE);
-
-    public DireWolfEntity(EntityType<? extends DireWolfEntity> entityType, World world) {
-        super(entityType, world);
+    public DireWolfEntity(EntityType<? extends AnimalEntity> entityType, World level) {
+        super(entityType, level);
     }
 
-    public static DefaultAttributeContainer.Builder setAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.HORSE_JUMP_STRENGTH)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 53.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.22499999403953552);
-    }
-    protected void initGoals() {
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.2));
-        this.goalSelector.add(1, new HorseBondWithPlayerGoal(this, 1.2));
-        this.goalSelector.add(2, new AnimalMateGoal(this, 1.0, AbstractHorseEntity.class));
-        this.goalSelector.add(4, new FollowParentGoal(this, 1.0));
-        this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.7));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
-        if (this.shouldAmbientStand()) {
-            this.goalSelector.add(9, new AmbientStandGoal(this));
-        }
-
-        this.initCustomGoals();
-    }
-
-    protected void initCustomGoals() {
-        this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(new ItemConvertible[]{ModItems.UNDEFINED_CANDY}), false));
-    }
-
-    protected void initAttributes(Random random) {
-        EntityAttributeInstance attributeInstance;
-        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
-        attributeInstance.setBaseValue(getChildHealthBonus(random::nextInt));
-        attributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        attributeInstance.setBaseValue(getChildMovementSpeedBonus(random::nextDouble));
-        attributeInstance = this.getAttributeInstance(EntityAttributes.HORSE_JUMP_STRENGTH);
-        attributeInstance.setBaseValue(getChildJumpStrengthBonus(random::nextDouble));
-    }
-
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(HORSE_FLAGS, (byte)0);
-    }
-
-    public boolean getHorseFlag(int bitmask) {
-        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
-    }
-
-    protected void setHorseFlag(int bitmask, boolean flag) {
-        byte b = this.dataTracker.get(HORSE_FLAGS);
-        if (flag) {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b | bitmask));
-        } else {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(b & ~bitmask));
-        }
-
-    }
-
-    @Override
-    public EntityView method_48926() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getOwner() {
-        return super.getOwner();
-    }
-
-    @Override
-    public int getJumpCooldown() {
-        return super.getJumpCooldown();
-    }
-
-    @Override
-    public SoundEvent getSaddleSound() {
-        return super.getSaddleSound();
-    }
-
-    @Override
-    public boolean cannotBeSilenced() {
-        return super.cannotBeSilenced();
-    }
-
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return ModEntities.DIRE_WOLF.create(world);
-    }
-
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-
-    private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
-        if (event.isMoving()) {
-            event.getController().setAnimation(RawAnimation.begin().then("animation.wolf.walk", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
-        }
-
-        event.getController().setAnimation(RawAnimation.begin().then("animation.wolf.idle", Animation.LoopType.LOOP));
-        return PlayState.CONTINUE;
-    }
-
-    protected void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
-        super.updatePassengerPosition(passenger, positionUpdater);
-        if (passenger instanceof LivingEntity) {
-            ((LivingEntity)passenger).bodyYaw = this.bodyYaw;
-        }
-    }
-
+    // Let the player ride the entity
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        boolean bl = !this.isBaby() && this.isTame() && player.shouldCancelInteraction();
-        if (!this.hasPassengers() && !bl) {
-            ItemStack itemStack = player.getStackInHand(hand);
-            if (!itemStack.isEmpty()) {
-                if (this.isBreedingItem(itemStack)) {
-                    return this.interactHorse(player, itemStack);
-                }
+        if (!this.hasPassengers()) {
+            player.startRiding(this);
 
-                if (!this.isTame()) {
-                    this.playAngrySound();
-                    return ActionResult.success(this.getWorld().isClient);
-                }
+            return super.interactMob(player, hand);
+        }
+
+        return super.interactMob(player, hand);
+    }
+
+    // Turn off step sounds since it's a bike
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState block) {}
+
+    // Apply player-controlled movement
+    @Override
+    public void travel(Vec3d pos) {
+        if (this.isAlive()) {
+            if (this.hasPassengers()) {
+                LivingEntity passenger = (LivingEntity)getControllingPassenger();
+                this.prevYaw = getYaw();
+                this.prevPitch = getPitch();
+
+                setYaw(passenger.getYaw());
+                setPitch(passenger.getPitch() * 0.5f);
+                setRotation(getYaw(), getPitch());
+
+                this.bodyYaw = this.getYaw();
+                this.headYaw = this.bodyYaw;
+                float x = passenger.sidewaysSpeed * 0.5F;
+                float z = passenger.forwardSpeed;
+
+                if (z <= 0)
+                    z *= 0.25f;
+
+                this.setMovementSpeed(0.3f);
+                super.travel(new Vec3d(x, pos.y, z));
             }
-
-            return super.interactMob(player, hand);
-        } else {
-            return super.interactMob(player, hand);
         }
     }
 
+    // Get the controlling passenger
+    @Nullable
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return TAMING_INGREDIENT.test(stack);
+    public LivingEntity getControllingPassenger() {
+        return getFirstPassenger() instanceof LivingEntity entity ? entity : null;
     }
 
     @Override
-    public boolean canBreedWith(AnimalEntity other) {
-        if (other == this) {
-            return false;
-        } else {
-            return this.canBreed();
+    public boolean isLogicalSideForUpdatingMovement() {
+        return true;
+    }
+
+    // Adjust the rider's position while riding
+    @Override
+    public void updatePassengerPosition(Entity entity, PositionUpdater moveFunction) {
+        if (entity instanceof LivingEntity passenger) {
+            moveFunction.accept(entity, getX(), getY() - 0.1f, getZ());
+
+            this.prevPitch = passenger.prevPitch;
         }
     }
 
-    private static final Ingredient TAMING_INGREDIENT;
-    static {
-        TAMING_INGREDIENT = Ingredient.ofItems(new ItemConvertible[]{ModItems.UNDEFINED_CANDY});
+    // Add our idle/moving animation controller
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 2, state -> {
+            if (state.isMoving() && getControllingPassenger() != null) {
+                return state.setAndContinue(DefaultAnimations.DRIVE);
+            }
+            else {
+                return state.setAndContinue(DefaultAnimations.IDLE);
+            }
+            // Handle the sound keyframe that is part of our animation json
+        }).setSoundKeyframeHandler(event -> {
+            // We don't have a sound for this yet :(
+        }));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
+        return this.cache;
     }
 
+    @Override
+    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+        return null;
+    }
+
+    @Override
+    protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+        return 0.5F;
+    }
 }

@@ -4,13 +4,18 @@ import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.entity.custom.DireWolfEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import software.bernie.geckolib.GeckoLib;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class DireWolfModel extends GeoModel<DireWolfEntity> {
+public class DireWolfModel extends DefaultedEntityGeoModel<DireWolfEntity> {
+    public DireWolfModel() {
+        super(new Identifier(CoffeeHouse.MOD_ID, "dire_wolf"));
+    }
 
     @Override
     public Identifier getModelResource(DireWolfEntity animatable) {
