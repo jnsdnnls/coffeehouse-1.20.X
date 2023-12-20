@@ -2,8 +2,7 @@ package net.jdonthatrack.coffeehouse.screen;
 
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicModelItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +13,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -77,22 +75,16 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         int i;
         this.context = context;
         this.world = playerInventory.player.getWorld();
-        this.currencySlot = this.addSlot(new Slot(this.currency, 0, 98, 61) {
+        this.currencySlot = this.addSlot(new Slot(this.currency, 0, 111, 7) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return stack.isOf(ModItems.UNDEFINIUM);
             }
         });
-        this.inputSlot = this.addSlot(new Slot(this.input, 0, 69, 61) {
-
+        this.inputSlot = this.addSlot(new Slot(this.input, 0, 84, 7) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                if (stack.getItem() instanceof DynamicArmorItem) {
-                    return stack.getItem() instanceof DynamicArmorItem;
-                } else if (stack.getItem() instanceof DynamicSpawnEggItem) {
-                    return stack.getItem() instanceof DynamicSpawnEggItem;
-                }
-                return false;
+                return stack.getItem() instanceof DynamicModelItem;
             }
 
             @Override
@@ -100,7 +92,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                 return 1;
             }
         });
-        this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 61) {
+        this.outputSlot = this.addSlot(new Slot(this.output, 0, 152, 7) {
 
             @Override
             public boolean canInsert(ItemStack stack) {
@@ -163,9 +155,9 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean onButtonClick(PlayerEntity player, int id) {
-        if (this.isInBounds(id)) {
-            this.selectedRecipe.set(id);
+    public boolean onButtonClick(PlayerEntity player, int buttonIndex) {
+        if (this.isInBounds(buttonIndex)) {
+            this.selectedRecipe.set(buttonIndex);
             this.populateResult();
         }
         return true;
@@ -215,7 +207,10 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     void populateResult() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.selectedRecipe.get())) {
             RecipeEntry<DefiningRecipe> recipeEntry = this.availableRecipes.get(this.selectedRecipe.get());
-            ItemStack itemStack = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
+            ItemStack itemStack2 = recipeEntry.value().craft(this.input, this.world.getRegistryManager());
+            ItemStack itemStack = recipeEntry.value().getOutput(this.inputSlot.getStack());
+//            CoffeeHouse.LOGGER.info("recipeEntry.value().craft(this.input, this.world.getRegistryManager()) = " + itemStack);
+//            CoffeeHouse.LOGGER.info("recipeEntry.value().getOutput(this.inputSlot.getStack()) = " + itemStack2);
             if (itemStack.isItemEnabled(this.world.getEnabledFeatures())) {
                 this.output.setLastRecipe(recipeEntry);
                 this.outputSlot.setStackNoCallbacks(itemStack);
@@ -260,7 +255,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(stackToMove, INVENTORY_START, HOTBAR_END, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (item instanceof DynamicArmorItem) {
+            } else if (item instanceof DynamicModelItem) {
                 if (!this.insertItem(stackToMove, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -291,7 +286,6 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     public List<RecipeEntry<DefiningRecipe>> getAllValidRecipes(Inventory inventory, World world) {
-
         return world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, inventory, world);
     }
 
@@ -299,7 +293,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         List<RecipeEntry<DefiningRecipe>> validRecipes = getAllValidRecipes(inventory, world);
 
         // Sort the valid recipes based on the recipe ID
-        validRecipes.sort(Comparator.comparing(recipeEntry -> recipeEntry.id().toString()));
+        validRecipes.sort(Comparator.comparing(RecipeEntry::id));
 
         return validRecipes;
     }

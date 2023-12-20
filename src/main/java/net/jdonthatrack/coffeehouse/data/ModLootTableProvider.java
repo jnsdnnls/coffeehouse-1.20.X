@@ -13,8 +13,6 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
 import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LeafEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
 import net.minecraft.loot.function.ApplyBonusLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
@@ -39,7 +37,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item, Float minItem, Float maxItem) {
-        return dropsWithSilkTouch(drop,this.applyExplosionDecay(drop,
+        return dropsWithSilkTouch(drop, this.applyExplosionDecay(drop,
                 ItemEntry.builder(item)
                         .apply(SetCountLootFunction
                                 .builder(UniformLootNumberProvider

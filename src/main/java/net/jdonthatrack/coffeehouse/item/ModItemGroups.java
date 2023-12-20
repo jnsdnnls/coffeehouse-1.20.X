@@ -4,13 +4,12 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
-import net.minecraft.entity.decoration.painting.PaintingEntity;
-import net.minecraft.entity.decoration.painting.PaintingVariant;
-import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
+import net.jdonthatrack.coffeehouse.item.custom.DynamicModelItem;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -28,8 +27,7 @@ public class ModItemGroups {
                     };
 
                     for (ItemStack stack : armorPieces) {
-                        NbtCompound nbt = stack.getOrCreateNbt();
-                        nbt.putString("model", "undefined_armor"); // Replace with your actual model value
+                        DynamicModelItem.setModel(stack, "undefined"); // Replace with your actual model value
                         entries.add(stack);
                     }
 

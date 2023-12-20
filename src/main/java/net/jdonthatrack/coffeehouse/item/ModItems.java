@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ModItems {
 
-    public static final List<String> VALID_MODELS = List.of("amethyst_armor", "torch_armor");
+    public static final List<String> VALID_MODELS = List.of("amethyst", "torch", "undefined");
 
     public static final Item UNDEFINED_CANDY = registerItem("undefined_candy", new Item(new FabricItemSettings().food(ModFoodComponents.UNDEFINED_CANDY)));
     public static final Item UNDEFINED_CANDY_SEEDS = registerItem("undefined_candy_seeds",

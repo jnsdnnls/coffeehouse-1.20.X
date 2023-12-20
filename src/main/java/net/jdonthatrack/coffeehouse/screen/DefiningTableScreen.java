@@ -7,11 +7,11 @@ import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.ScreenHandler;
@@ -21,14 +21,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-
 import java.util.List;
-
-import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class DefiningTableScreen
@@ -41,20 +36,18 @@ public class DefiningTableScreen
     private static final Identifier TEXTURE = new Identifier(CoffeeHouse.MOD_ID, "textures/gui/container/defining_table_gui.png");
     private static final int SCROLLBAR_WIDTH = 12;
     private static final int SCROLLBAR_HEIGHT = 15;
-    private static final int RECIPE_LIST_COLUMNS = 4;
+    private static final int RECIPE_LIST_COLUMNS = 5;
     private static final int RECIPE_LIST_ROWS = 3;
     private static final int RECIPE_ENTRY_WIDTH = 16;
     private static final int RECIPE_ENTRY_HEIGHT = 18;
-    private static final int SCROLLBAR_AREA_HEIGHT = 54;
-    private static final int RECIPE_LIST_OFFSET_X = 63;
-    private static final int RECIPE_LIST_OFFSET_Y = 6;
+    private static final int SCROLLBAR_AREA_HEIGHT = 48;
+    private static final int RECIPE_LIST_OFFSET_X = 73;
+    private static final int RECIPE_LIST_OFFSET_Y = 29;
     private float scrollAmount;
     private boolean mouseClicked;
     private int scrollOffset;
     private boolean canCraft;
-
-    @Nullable
-    private ArmorStandEntity armorStand;
+    @Nullable private ArmorStandEntity armorStand;
 
     public DefiningTableScreen(DefiningTableScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -65,7 +58,6 @@ public class DefiningTableScreen
     @Override
     protected void init() {
         super.init();
-        titleY = 1000;
         this.armorStand = new ArmorStandEntity(this.client.world, 0.0, 0.0, 0.0);
         this.armorStand.setHideBasePlate(true);
         this.armorStand.setShowArms(true);
@@ -90,19 +82,20 @@ public class DefiningTableScreen
         int k = (int)(41.0f * this.scrollAmount);
         Identifier scrollBarTexture = this.shouldScroll() ? SCROLLER_TEXTURE : SCROLLER_DISABLED_TEXTURE;
 //        context.drawGuiTexture(scrollBarTexture, x + 119, y + 15 + k, 12, 15);
-        context.drawGuiTexture(scrollBarTexture, x + 156, y + 7 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        context.drawGuiTexture(scrollBarTexture, x + 156, y + 30 + k, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
         int l = this.x + RECIPE_LIST_OFFSET_X;
         int m = this.y + RECIPE_LIST_OFFSET_Y;
         int n = this.scrollOffset + SCROLLBAR_WIDTH;
         this.renderRecipeBackground(context, mouseX, mouseY, l, m, n);
         this.renderRecipeIcons(context, l, m, n);
+//        drawEntity(context, x, y, x + 65, y + 75, 25, 0.0625F, mouseX, mouseY, this.armorStand);
 
         double rotation = -90.0 * ((double)System.currentTimeMillis() / 1000.0) % 360.0 * 1;
         Quaternionf rotationQuaternion = new Quaternionf().rotationXYZ(0, 0.0F, 3.13f);
         Quaternionf dynamicRotationQuaternion = eulerToQuaternion((float) Math.toRadians(rotation));
         Quaternionf finalQuaternion = rotationQuaternion.mul(dynamicRotationQuaternion);
 
-        drawEntity(context, (float)(this.x + 31), (float)(this.y + 62), 25, new Vector3f(0.0625F), finalQuaternion, (Quaternionf)null, this.armorStand);
+        InventoryScreen.drawEntity(context, (float)(this.x + 31), (float)(this.y + 62), 25, new Vector3f(0.0625F), finalQuaternion, null, this.armorStand);
 
         // drawEntity(context, x, y, x + 65, y + 75, 25, 0.0625F, mouseX, mouseY, this.armorStand);
     }
@@ -142,12 +135,12 @@ public class DefiningTableScreen
 
     private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
         List<RecipeEntry<DefiningRecipe>> availableRecipes = this.handler.getAvailableRecipes();
-        for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getAvailableRecipeCount(); ++i) {
-            int j = i - this.scrollOffset;
+        for (int recipeIndex = this.scrollOffset; recipeIndex < scrollOffset && recipeIndex < this.handler.getAvailableRecipeCount(); ++recipeIndex) {
+            int j = recipeIndex - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = j / RECIPE_LIST_COLUMNS;
             int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
-            context.drawItem(availableRecipes.get(i).value().getOutput(this.handler.inputSlot.getStack()), k, m);
+            context.drawItem(availableRecipes.get(recipeIndex).value().getOutput(this.handler.inputSlot.getStack()), k, m);
         }
     }
 
@@ -158,13 +151,13 @@ public class DefiningTableScreen
             int i = this.x + RECIPE_LIST_OFFSET_X;
             int j = this.y + RECIPE_LIST_OFFSET_Y;
             int k = this.scrollOffset + SCROLLBAR_WIDTH;
-            for (int l = this.scrollOffset; l < k; ++l) {
-                int m = l - this.scrollOffset;
+            for (int buttonIndex = this.scrollOffset; buttonIndex < k; ++buttonIndex) {
+                int m = buttonIndex - this.scrollOffset;
                 double d = mouseX - (double)(i + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH);
                 double e = mouseY - (double)(j + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT);
-                if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, l)) continue;
+                if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, buttonIndex)) continue;
                 this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
-                this.client.interactionManager.clickButton(this.handler.syncId, l);
+                this.client.interactionManager.clickButton(this.handler.syncId, buttonIndex);
                 this.equipArmorStand(this.handler.outputSlot.getStack());
                 return true;
             }
@@ -219,18 +212,15 @@ public class DefiningTableScreen
 
     private void equipArmorStand(ItemStack stack) {
         if (this.armorStand != null) {
-            EquipmentSlot[] var2 = EquipmentSlot.values();
-            int var3 = var2.length;
+            EquipmentSlot[] equipmentSlots = EquipmentSlot.values();
 
-            for(int var4 = 0; var4 < var3; ++var4) {
-                EquipmentSlot equipmentSlot = var2[var4];
+            for (EquipmentSlot equipmentSlot : equipmentSlots) {
                 this.armorStand.equipStack(equipmentSlot, ItemStack.EMPTY);
             }
 
             if (!stack.isEmpty()) {
                 ItemStack itemStack = stack.copy();
-                Item var8 = stack.getItem();
-                if (var8 instanceof DynamicArmorItem armorItem) {
+                if (stack.getItem() instanceof DynamicArmorItem armorItem) {
                     this.armorStand.equipStack(armorItem.getSlotType(), itemStack);
                 } else {
                     this.armorStand.equipStack(EquipmentSlot.OFFHAND, itemStack);

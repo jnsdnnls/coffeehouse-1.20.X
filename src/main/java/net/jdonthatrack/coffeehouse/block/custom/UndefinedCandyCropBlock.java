@@ -34,7 +34,7 @@ public class UndefinedCandyCropBlock extends CropBlock {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return AGE_TO_SHAPE[(Integer) state.get(this.getAgeProperty())];
+        return AGE_TO_SHAPE[state.get(this.getAgeProperty())];
     }
 
     @Override

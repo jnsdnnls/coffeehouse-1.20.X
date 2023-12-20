@@ -2,7 +2,7 @@
   "itemgroup.coffeehouse.creativetab": "Coffee House",
 
   "item.coffeehouse.model": "§8Model: ",
-  "item.coffeehouse.custom_armor": "%d %d",
+  "item.coffeehouse.custom_item": "%d %d",
   "item.coffeehouse.windigo_spawn_egg": "Windigo Spawn Egg",
   "item.coffeehouse.raptor_spawn_egg": "Raptor Spawn Egg",
 

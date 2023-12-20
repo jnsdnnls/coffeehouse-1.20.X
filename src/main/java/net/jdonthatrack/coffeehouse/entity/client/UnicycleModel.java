@@ -2,9 +2,6 @@ package net.jdonthatrack.coffeehouse.entity.client;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.entity.custom.UnicycleEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.WindigoEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib.constant.DataTickets;

@@ -40,7 +40,7 @@ public class RaptorModel extends GeoModel<RaptorEntity> {
         CoreGeoBone saddle = this.getAnimationProcessor().getBone("saddle");
         CoreGeoBone rein = this.getAnimationProcessor().getBone("rein");
         CoreGeoBone headpiece = this.getAnimationProcessor().getBone("headpiece");
-        if (saddle !=null) {
+        if (saddle != null) {
             saddle.setHidden(!this.isSaddled(animatable));
             rein.setHidden(!this.isSaddled(animatable));
             headpiece.setHidden(!this.isSaddled(animatable));
@@ -49,6 +49,6 @@ public class RaptorModel extends GeoModel<RaptorEntity> {
     }
 
     public boolean isSaddled(RaptorEntity raptor) {
-        return (raptor.getHorseFlag(4));
+        return raptor.getHorseFlag(4);
     }
 }

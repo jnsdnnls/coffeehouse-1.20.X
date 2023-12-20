@@ -2,7 +2,6 @@ package net.jdonthatrack.coffeehouse.entity.client;
 
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.entity.custom.FerretEntity;
-import net.jdonthatrack.coffeehouse.entity.custom.RaptorEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,7 +20,7 @@ public class FerretRenderer extends GeoEntityRenderer<FerretEntity> {
 
     @Override
     public void render(FerretEntity entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-        if(entity.isBaby()) {
+        if (entity.isBaby()) {
             poseStack.scale(0.4f, 0.4f, 0.4f);
         }
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);

@@ -12,8 +12,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -31,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCommonMethods {
+public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCommonMethods, DynamicModelItem {
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     // ARMOR ITEM
@@ -48,14 +46,14 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
 
     private static void registerModelPredicateForArmorItem(Item armorItem) {
         ModelPredicateProviderRegistry.register(armorItem, new Identifier("model"), (stack, clientWorld, livingEntity, seed) -> {
-            NbtCompound nbt = stack.getNbt();
-            if (!stack.hasNbt() || !nbt.contains("model", NbtElement.STRING_TYPE)) { // Use a default value if the "model" tag is missing
+            if (!DynamicModelItem.hasModel(stack)) { // Use a default value if the "model" tag is missing
                 return 0.0f;
             }
-            String modelValue = nbt.getString("model");
+            String modelValue = DynamicModelItem.getModel(stack);
             return switch (modelValue) {
-                case "torch_armor" -> 0.1f;
-                case "amethyst_armor" -> 0.2f;
+                case "undefined" -> 0.0f;
+                case "torch" -> 0.1f;
+                case "amethyst" -> 0.2f;
                 // Add cases for other armor types if needed
                 default -> 0.0f;
             };
@@ -78,40 +76,29 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
 
             @Override
             @SuppressWarnings("unchecked")
+            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack stack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
 
-            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
-
-                String currentModel = itemStack.getNbt().getString("model");
-                if (isValid(currentModel)) {
-
-                    Identifier modelIdentifier = new Identifier(CoffeeHouse.MOD_ID, currentModel);
-                    DynamicArmorRenderer renderer = renderers.computeIfAbsent(currentModel, model -> new DynamicArmorRenderer(modelIdentifier));
-
-                    renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                    return renderer;
-                } else {
-                    currentModel = "undefined_armor";
-                    Identifier modelIdentifier = new Identifier(CoffeeHouse.MOD_ID, currentModel);
-                    DynamicArmorRenderer renderer = renderers.computeIfAbsent(currentModel, model -> new DynamicArmorRenderer(modelIdentifier));
-
-                    renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-                    return renderer;
+                String currentModel = DynamicModelItem.getModel(stack);
+                if (!isValid(currentModel)) {
+                    currentModel = "undefined";
                 }
+
+                Identifier modelIdentifier = new Identifier(CoffeeHouse.MOD_ID, currentModel);
+                DynamicArmorRenderer renderer = renderers.computeIfAbsent(currentModel, model -> new DynamicArmorRenderer(modelIdentifier));
+
+                renderer.prepForRender(livingEntity, stack, equipmentSlot, original);
+                return renderer;
             }
 
             private boolean isValid(String model) {
-                return !model.isEmpty() && ModItems.VALID_MODELS.contains(model);
+                return ModItems.VALID_MODELS.contains(model);
             }
         });
     }
 
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public Type getType() {
-        return this.type;
     }
 
     @Override
@@ -123,28 +110,25 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
     // APPEND TOOLTIP
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasNbt()) {
-            String currentModel = stack.getNbt().getString("model");
-            if (context.isAdvanced()) {
-                tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
-            }
+        String currentModel;
+        if (DynamicModelItem.hasModel(stack)) {
+            currentModel = DynamicModelItem.getModel(stack);
         } else {
-            if (context.isAdvanced()) {
-                tooltip.add(Text.literal("Model: " + "undefined_armor").formatted(Formatting.GRAY));
-            }
+            currentModel = "undefined";
+        }
+        if (context.isAdvanced()) {
+            tooltip.add(Text.literal("Model: " + currentModel).formatted(Formatting.GRAY));
         }
     }
 
     @Override
     public Text getName(ItemStack stack) {
-        NbtCompound nbt = stack.getNbt();
-
         String currentModel;
 
-        if (!stack.hasNbt() || !nbt.contains("model", NbtElement.STRING_TYPE)) {
+        if (!DynamicModelItem.hasModel(stack)) {
             currentModel = "Undefined";
         } else {
-            currentModel = nbt.getString("model").replace("_armor", "");
+            currentModel = DynamicModelItem.getModel(stack);
         }
 
         String armorType = switch (this.type) {
@@ -154,6 +138,6 @@ public class DynamicArmorItem extends ArmorItem implements GeoItem, ArmorItemCom
             case BOOTS -> "Boots";
         };
 
-        return Text.translatable("item.coffeehouse.custom_armor", capitalize(currentModel), armorType);
+        return Text.translatable("item.coffeehouse.custom_item", capitalize(currentModel), armorType);
     }
 }
