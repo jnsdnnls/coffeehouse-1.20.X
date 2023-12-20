@@ -1,6 +1,7 @@
 package net.jdonthatrack.coffeehouse.entity.custom;
 
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -8,43 +9,38 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class UnicycleEntity extends AbstractHorseEntity implements GeoEntity {
 
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
-    private static final TrackedData<Byte> HORSE_FLAGS = DataTracker.registerData(UnicycleEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final Ingredient TAMING_INGREDIENT = Ingredient.ofItems(ModItems.UNDEFINED_CANDY);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public UnicycleEntity(EntityType<? extends UnicycleEntity> entityType, World world) {
         super(entityType, world);
     }
 
     public static DefaultAttributeContainer.Builder setAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.HORSE_JUMP_STRENGTH)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 53.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.22499999403953552);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 53.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.22499999403953552);
     }
 
     @Override
@@ -56,18 +52,11 @@ public class UnicycleEntity extends AbstractHorseEntity implements GeoEntity {
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.7));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        if (this.shouldAmbientStand()) {
-            this.goalSelector.add(9, new AmbientStandGoal(this));
-        }
 
-        this.initCustomGoals();
-    }
-
-    @Override
-    protected void initCustomGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(3, new TemptGoal(this, 1.25, Ingredient.ofItems(Items.GOLDEN_CARROT, Items.GOLDEN_APPLE, Items.ENCHANTED_GOLDEN_APPLE), false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, TAMING_INGREDIENT, false));
     }
+
 
     @Override
     protected void initAttributes(@NotNull Random random) {
@@ -83,49 +72,11 @@ public class UnicycleEntity extends AbstractHorseEntity implements GeoEntity {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(HORSE_FLAGS, (byte)0);
-    }
-
-    @Override
-    public boolean getHorseFlag(int bitmask) {
-        return (this.dataTracker.get(HORSE_FLAGS) & bitmask) != 0;
-    }
-
-    @Override
-    protected void setHorseFlag(int bitmask, boolean flag) {
-        byte horseFlags = this.dataTracker.get(HORSE_FLAGS);
-        if (flag) {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(horseFlags | bitmask));
-        } else {
-            this.dataTracker.set(HORSE_FLAGS, (byte)(horseFlags & ~bitmask));
-        }
-
     }
 
     @Override
     public EntityView method_48926() {
         return this.getWorld();
-    }
-
-    @Nullable
-    @Override
-    public LivingEntity getOwner() {
-        return super.getOwner();
-    }
-
-    @Override
-    public int getJumpCooldown() {
-        return super.getJumpCooldown();
-    }
-
-    @Override
-    public SoundEvent getSaddleSound() {
-        return super.getSaddleSound();
-    }
-
-    @Override
-    public boolean cannotBeSilenced() {
-        return super.cannotBeSilenced();
     }
 
     @Override
@@ -154,6 +105,36 @@ public class UnicycleEntity extends AbstractHorseEntity implements GeoEntity {
         if (passenger instanceof LivingEntity livingPassenger) {
             livingPassenger.bodyYaw = this.bodyYaw;
         }
+    }
+
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        boolean bl = !this.isBaby() && this.isTame() && player.shouldCancelInteraction();
+        if (!this.hasPassengers() && !bl) {
+            ItemStack itemStack = player.getStackInHand(hand);
+            if (!itemStack.isEmpty()) {
+                if (this.isBreedingItem(itemStack)) {
+                    return this.interactHorse(player, itemStack);
+                }
+
+                if (!this.isTame()) {
+                    this.playAngrySound();
+                    return ActionResult.success(this.getWorld().isClient);
+                }
+            }
+
+        }
+        return super.interactMob(player, hand);
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return TAMING_INGREDIENT.test(stack);
+    }
+
+    @Override
+    public boolean canBreedWith(AnimalEntity other) {
+        return other != this && this.canBreed();
     }
 
     @Override

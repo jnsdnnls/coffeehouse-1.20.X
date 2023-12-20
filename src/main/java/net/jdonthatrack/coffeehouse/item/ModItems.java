@@ -2,10 +2,12 @@ package net.jdonthatrack.coffeehouse.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
+import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
 import net.jdonthatrack.coffeehouse.sound.ModSounds;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.AliasedBlockItem;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.MusicDiscItem;
@@ -19,6 +21,9 @@ public class ModItems {
 
     public static final List<String> VALID_MODELS = List.of("amethyst", "torch", "undefined");
 
+    public static final Item UNDEFINED_CANDY = registerItem("undefined_candy", new Item(new FabricItemSettings().food(ModFoodComponents.UNDEFINED_CANDY)));
+    public static final Item UNDEFINED_CANDY_SEEDS = registerItem("undefined_candy_seeds",
+            new AliasedBlockItem(ModBlocks.UNDEFINED_CANDY_CROP, new FabricItemSettings()));
     public static final Item UNDEFINIUM = registerItem("undefinium", new Item(new FabricItemSettings()));
     public static final Item UNDEFINIUM_SHARD = registerItem("undefinium_shard", new Item(new FabricItemSettings()));
 

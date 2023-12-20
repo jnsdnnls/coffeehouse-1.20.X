@@ -7,8 +7,8 @@
 				"texture_width": 64,
 				"texture_height": 64,
 				"visible_bounds_width": 4,
-				"visible_bounds_height": 2.5,
-				"visible_bounds_offset": [0, 0.75, 0]
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
 			},
 			"bones": [
 				{
@@ -32,7 +32,7 @@
 				{
 					"name": "head",
 					"parent": "neck",
-					"pivot": [-6.75, 12.75, 1.5],
+					"pivot": [-5.75, 12.75, 1.5],
 					"cubes": [
 						{"origin": [-10, 12, -2], "size": [5, 4, 5], "uv": [21, 19]},
 						{"origin": [-11, 12, -1], "size": [1, 2, 3], "uv": [24, 28]},

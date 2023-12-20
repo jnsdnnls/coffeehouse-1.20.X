@@ -7,6 +7,7 @@ import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -19,6 +20,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -86,6 +89,15 @@ public class DefiningTableScreen
         this.renderRecipeBackground(context, mouseX, mouseY, l, m, n);
         this.renderRecipeIcons(context, l, m, n);
 //        drawEntity(context, x, y, x + 65, y + 75, 25, 0.0625F, mouseX, mouseY, this.armorStand);
+
+        double rotation = -90.0 * ((double)System.currentTimeMillis() / 1000.0) % 360.0 * 1;
+        Quaternionf rotationQuaternion = new Quaternionf().rotationXYZ(0, 0.0F, 3.13f);
+        Quaternionf dynamicRotationQuaternion = eulerToQuaternion((float) Math.toRadians(rotation));
+        Quaternionf finalQuaternion = rotationQuaternion.mul(dynamicRotationQuaternion);
+
+        InventoryScreen.drawEntity(context, (float)(this.x + 31), (float)(this.y + 62), 25, new Vector3f(0.0625F), finalQuaternion, null, this.armorStand);
+
+        // drawEntity(context, x, y, x + 65, y + 75, 25, 0.0625F, mouseX, mouseY, this.armorStand);
     }
 
     @Override
@@ -216,5 +228,12 @@ public class DefiningTableScreen
             }
 
         }
+    }
+
+    public static Quaternionf eulerToQuaternion(float rotation) {
+        Quaternionf quaternion = new Quaternionf();
+        quaternion.rotationY(rotation);
+
+        return quaternion;
     }
 }

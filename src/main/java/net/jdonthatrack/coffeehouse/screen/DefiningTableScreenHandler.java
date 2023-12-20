@@ -2,9 +2,7 @@ package net.jdonthatrack.coffeehouse.screen;
 
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.item.ModItems;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicModelItem;
-import net.jdonthatrack.coffeehouse.item.custom.DynamicSpawnEggItem;
 import net.jdonthatrack.coffeehouse.recipe.DefiningRecipe;
 import net.jdonthatrack.coffeehouse.recipe.ModRecipeTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -257,7 +255,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
                 if (!this.insertItem(stackToMove, INVENTORY_START, HOTBAR_END, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (item instanceof DynamicArmorItem) {
+            } else if (item instanceof DynamicModelItem) {
                 if (!this.insertItem(stackToMove, 1, 2, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -288,7 +286,6 @@ public class DefiningTableScreenHandler extends ScreenHandler {
     }
 
     public List<RecipeEntry<DefiningRecipe>> getAllValidRecipes(Inventory inventory, World world) {
-
         return world.getRecipeManager().getAllMatches(ModRecipeTypes.DEFINING, inventory, world);
     }
 
@@ -296,7 +293,7 @@ public class DefiningTableScreenHandler extends ScreenHandler {
         List<RecipeEntry<DefiningRecipe>> validRecipes = getAllValidRecipes(inventory, world);
 
         // Sort the valid recipes based on the recipe ID
-        validRecipes.sort(Comparator.comparing(recipeEntry -> recipeEntry.id().toString()));
+        validRecipes.sort(Comparator.comparing(RecipeEntry::id));
 
         return validRecipes;
     }

@@ -1,6 +1,7 @@
 package net.jdonthatrack.coffeehouse.entity.custom;
 
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
+import net.jdonthatrack.coffeehouse.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -13,11 +14,13 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
@@ -25,16 +28,15 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.UUID;
 
 public class FerretEntity extends TameableEntity implements GeoEntity {
-
-    private static final Ingredient TAMING_ITEMS = Ingredient.ofItems(Items.RABBIT, Items.CHICKEN);
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private static final Ingredient TAMING_INGREDIENT = Ingredient.ofItems(ModItems.UNDEFINED_CANDY);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public FerretEntity(EntityType<? extends FerretEntity> entityType, World world) {
         super(entityType, world);
@@ -57,6 +59,9 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0));
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.add(10, new LookAroundGoal(this));
+
+        this.goalSelector.add(3, new TemptGoal(this, 1.25, TAMING_INGREDIENT, false));
+
     }
 
     @Override
@@ -102,7 +107,6 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
     }
 
     @Nullable
-    @Override
     public FerretEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
         FerretEntity ferretEntity = ModEntities.FERRET.create(serverWorld);
         if (ferretEntity != null) {
@@ -118,7 +122,7 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
-        return TAMING_ITEMS.test(stack);
+        return TAMING_INGREDIENT.test(stack);
     }
 
     @Override
@@ -147,12 +151,64 @@ public class FerretEntity extends TameableEntity implements GeoEntity {
             return PlayState.CONTINUE;
         }
 
+        if (this.isSitting()) {
+            event.getController().setAnimation(RawAnimation.begin().then("animation.ferret.sit", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+
         event.getController().setAnimation(RawAnimation.begin().then("animation.ferret.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
     @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
+
+        if (TAMING_INGREDIENT.test(stack) && !isTamed()) {
+            if (this.getWorld().isClient()) {
+                return ActionResult.CONSUME;
+            }
+            if (!player.getAbilities().creativeMode) {
+                stack.decrement(1);
+            }
+
+            super.setOwner(player);
+            this.navigation.recalculatePath();
+            this.setTarget(null);
+            this.getWorld().sendEntityStatus(this, (byte) 7);
+            this.setSitting(true);
+
+            return ActionResult.SUCCESS;
+        }
+
+        if (isTamed() && !this.getWorld().isClient() && hand == Hand.MAIN_HAND) {
+            this.setSitting(!isSitting());
+            return ActionResult.SUCCESS;
+        }
+
+        if (TAMING_INGREDIENT.test(stack)) {
+            return ActionResult.PASS;
+        }
+
+        return super.interactMob(player, hand);
+    }
+
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
     }
 }

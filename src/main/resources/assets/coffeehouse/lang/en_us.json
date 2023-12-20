@@ -8,14 +8,19 @@
 
   "item.coffeehouse.undefinium": "Undefinium",
   "item.coffeehouse.undefinium_shard": "Undefinium Shard",
+  "item.coffeehouse.undefined_candy": "Undefinium Candy",
+  "item.coffeehouse.undefined_candy_seeds": "Undefinium Candy Seeds",
 
   "block.coffeehouse.undefinium_block": "Block of Undefinium",
   "block.coffeehouse.undefinium_ore": "Undefinium Ore",
   "block.coffeehouse.deepslate_undefinium_ore": "Deepslate Undefinium Ore",
 
-
   "entity.coffeehouse.windigo": "Windigo",
   "entity.coffeehouse.raptor": "Raptor",
+  "entity.coffeehouse.dire_wolf": "Dire Wolf",
+  "entity.coffeehouse.earth_golem": "Earth Golem",
+  "entity.coffeehouse.unicycle": "Unicycle",
+  "entity.coffeehouse.ferret": "Ferret",
 
   "container.coffeehouse.defining_table": "Defining Table",
   "block.coffeehouse.defining_table": "Defining Table",

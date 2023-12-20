@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "coffeehouse:block/undefined_candy_crop_stage3"
+  }
+}

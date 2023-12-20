@@ -1,4 +1,5 @@
-// 1.20.2	2023-12-12T16:55:29.542006	CoffeeHouse/Tags for minecraft:block
+// 1.20.2	2023-12-19T15:08:10.8898	CoffeeHouse/Tags for minecraft:block
 f24262d3cd79d28517039161781b0efa24b4ec28 data\minecraft\tags\blocks\mineable\pickaxe.json
-63173c68cc5e6ee0b8e02f992416c9142ff7847c data\fabric\tags\blocks\needs_tool_level_4.json
+e73e33e8a9fe6e7fc34e1e07d07cb4846e9022be data\minecraft\tags\blocks\mineable\axe.json
 5cb0056b57dbd043c8643ddc616dee9c477475a8 data\minecraft\tags\blocks\needs_stone_tool.json
+63173c68cc5e6ee0b8e02f992416c9142ff7847c data\fabric\tags\blocks\needs_tool_level_4.json

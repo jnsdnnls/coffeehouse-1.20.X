@@ -1,5 +1,11 @@
 {
   "type": "coffeehouse:defining",
+  "ingredient": [
+    {"item": "coffeehouse:custom_helmet"},
+    {"item": "coffeehouse:custom_chestplate"},
+    {"item": "coffeehouse:custom_leggings"},
+    {"item": "coffeehouse:custom_boots"}
+  ],
   "price": 5,
   "model": "torch"
 }

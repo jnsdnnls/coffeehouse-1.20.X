@@ -1,0 +1,8 @@
+{
+  "type": "coffeehouse:defining",
+  "ingredient": {
+    "item": "coffeehouse:custom_spawn_egg"
+  },
+  "price": 5,
+  "model": "windigo"
+}

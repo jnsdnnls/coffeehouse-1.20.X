@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.jdonthatrack.coffeehouse.CoffeeHouse;
 import net.jdonthatrack.coffeehouse.block.custom.DefiningTableBlock;
+import net.jdonthatrack.coffeehouse.block.custom.UndefinedCandyCropBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.item.BlockItem;
@@ -25,6 +26,9 @@ public class ModBlocks {
 
     public static final Block DEFINING_TABLE = registerBlock("defining_table",
             new DefiningTableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque()));
+
+    public static final Block UNDEFINED_CANDY_CROP = Registry.register(Registries.BLOCK, new Identifier(CoffeeHouse.MOD_ID, "undefined_candy_crop"),
+            new UndefinedCandyCropBlock(FabricBlockSettings.copyOf(Blocks.WHEAT)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

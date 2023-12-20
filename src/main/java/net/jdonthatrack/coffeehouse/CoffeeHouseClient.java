@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.jdonthatrack.coffeehouse.block.ModBlocks;
 import net.jdonthatrack.coffeehouse.entity.ModEntities;
 import net.jdonthatrack.coffeehouse.entity.client.*;
-import net.jdonthatrack.coffeehouse.entity.custom.FerretEntity;
 import net.jdonthatrack.coffeehouse.item.custom.DynamicArmorItem;
 import net.jdonthatrack.coffeehouse.screen.DefiningTableScreen;
 import net.jdonthatrack.coffeehouse.screen.ModScreenHandlerTypes;
@@ -30,5 +29,7 @@ public class CoffeeHouseClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DEFINING_TABLE, RenderLayer.getCutout());
         HandledScreens.register(ModScreenHandlerTypes.DEFINING_TABLE, DefiningTableScreen::new);
+
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.UNDEFINED_CANDY_CROP, RenderLayer.getCutout());
     }
 }
